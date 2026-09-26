@@ -35,6 +35,8 @@ If SmartScreen says "Unknown publisher", choose **More info**, then **Run anyway
 5. Direct connect: the host's IP and port. Put a password only if the host has set one.
 6. Click **Connect**.
 7. If the game closes, click **Save All Logs To One Zip** under **Check mods** and send that zip.
+8. If the game says it cannot load a DLL and the message includes the folder path, click **Unblock DLLs**. That clears the Windows download mark under Modules. It does not change the mod files.
+9. **Clear shader cache** deletes only the shader folder in ProgramData. Close Bannerlord first. It does not touch mods or saves.
 
 # Do not
 - Do not unzip either compat zip, and do not copy them into Modules yourself.
@@ -56,12 +58,13 @@ Do the player steps first, so Bannerlord has the same modules. Download **Coodsz
 2. Pick a real TAOM campaign save. A vanilla new game and `default_new_game` are refused. **Start server** only loads a save already in the server Game Saves folder. If the line says Single player copy, click **Name server copy** first. Leave the name box blank to use that campaign's name.
 3. Click **Prepare server** once. If that folder is already prepared, leave it.
 4. Click **Start server**. Wait until the log says **SERVING**.
-5. Give players your port-forwarded IP address and UDP `4200`. Or use Steam. Give your friends your Steam name so they can connect.
-6. On the **Server** tab, under online players: **Refresh**, **Kick player**, **Ban player**, and **Unban player**. Banned names stay on the list. A banned player is kicked again while this tool is the program that started the server.
+5. If the server tool says it cannot load a DLL and the message includes the folder path, click **Unblock DLLs** in the server tool. That clears the Windows download mark in the server folder. A startup line that only says `Cannot load: SandBox.dll` is not a blocked file, and it does not replace **SERVING**.
+6. Give players your port-forwarded IP address and UDP `4200`. Or use Steam. Give your friends your Steam name so they can connect.
+7. On the **Server** tab, under online players: **Refresh**, **Kick player**, **Ban player**, and **Unban player**. Banned names stay on the list. A banned player is kicked again while this tool is the program that started the server.
 
 # Password
 
-Type a password in the server tool if you want one, and give players that same password. An empty password is fine. The client writes it into `Coop.Core.dll` and keeps `Coop.Core.dll.pre-password.bak`.
+Type a password in the server tool if you want one, and give players that same password. An empty password is fine. The client passes that password when you click **Connect**. It does not edit `Coop.Core.dll`. A password edit on that file crashes TAOM.CoopCompat. If that edit is already there, the client puts the pinned 0.1.5 file back. The server tool does the same for the server copy when you click **Start server**.
 
 # Do not
 - Do not prepare the server a second time over a folder that already has a host.
@@ -70,6 +73,7 @@ Type a password in the server tool if you want one, and give players that same p
 - Do not send anyone your Documents\Mount and Blade II Bannerlord\Game Saves folder.
 - Do not share `taom-server.json`.
 - Do not give friends port `7210`. Players use `4200`.
+- Do not use the client **Unblock DLLs** button for the server folder. The server tool has its own button.
 
 I will try my best to keep these updated and working with the latest release. Any bugs, challenges, feature ideas, or if you need help in any way, please let me know in this thread.
 
@@ -97,6 +101,6 @@ Dragging the new files onto the old ones is the same thing. Close the tools firs
 - Do not download the compat zips again.
 - Do not delete the TAOM-Coop-Host folder or anything in Documents.
 
-The new programs do the new checks themselves. The client raises Low terrain to Medium when you click **Connect**. The server tool copies missing .NET 6 files into the server folder when you click **Start server**. **Start server** only loads a save already in the server Game Saves folder. **Name server copy** makes that copy, and a blank name uses the campaign name. **Use Coop 0.1.5** puts 0.1.5 into Modules\Coop when that folder is another version, and moves the other Coop folder out of Modules. It does not make a second copy. **Save All Logs To One Zip** packs the client logs into one file. When a newer release is published, the tool writes one line that a new version is available. That line does not change the game, the mods, the server, or the save. After you replace the program and open the new copy, the line is gone.
+The new programs do the new checks themselves. The client raises Low terrain to Medium when you click **Connect**. The server tool copies missing .NET 6 files into the server folder when you click **Start server**. **Start server** only loads a save already in the server Game Saves folder. **Name server copy** makes that copy, and a blank name uses the campaign name. **Use Coop 0.1.5** puts 0.1.5 into Modules\Coop when that folder is another version, and moves the other Coop folder out of Modules. It does not make a second copy. **Save All Logs To One Zip** packs the client logs into one file. **Unblock DLLs** clears the Windows download mark. On the client that folder is Modules. On the server tool that folder is the server folder. It does not change the mod files. **Clear shader cache** deletes only the shader folder in ProgramData. Close Bannerlord first. It does not touch mods or saves. If `Coop.Core.dll` was edited for a password, the client puts the pinned 0.1.5 file back, and the server tool does the same on **Start server**. That edit crashes TAOM.CoopCompat. When a newer release is published, the tool writes one line that a new version is available. That line does not change the game, the mods, the server, or the save. After you replace the program and open the new copy, the line is gone.
 
 I will try my best to keep these updated and working with the latest release. Any bugs, challenges, feature ideas, or if you need help in any way, please let me know in this thread.
