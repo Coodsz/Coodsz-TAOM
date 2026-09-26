@@ -1,0 +1,75 @@
+Paste each part as its own Discord message. A line that starts with # is a big heading.
+
+# I made these tools for ease of access. I am not affiliated with the TAOM team. They are here so hosting and playing with friends is easier.
+
+PART 1 — players
+
+# Coodsz TAOM
+
+You need Bannerlord **1.4.8** on Steam.
+
+Same set for everyone: TAOM **2.0.27**, TAOM_Map **2.0.27**, TAOM.Dependencies **2.0.26**, LOTRLOME_Armory **2.0.26**, Workshop Coop **0.1.5** (`3770450698`), TAOM.CoopCompat **0.3.17**. Direct connect, UDP `4200`, Steam relay off.
+
+This does not work with the latest TAOM update yet. It works with Coop 0.1.5.
+
+.NET 8 Desktop Runtime, x64:
+https://dotnet.microsoft.com/download/dotnet/8.0
+
+# Download
+1. Download **Coodsz TAOM Client Launcher** from the release page. Unzip it before you open it.
+https://github.com/Coodsz/Coodsz-TAOM/releases/latest
+2. Put these in Downloads, still zipped: the TAOM **2.0.27** archive (name contains `TAOM`, not 2.0.28 or CompatOnly) and `TAOM-Coop-v0.3.17-CompatOnly-CLIENT`.
+3. In Steam, subscribe to Workshop `3770450698` and wait for Coop **0.1.5**.
+
+# If Windows warns you
+
+SmartScreen may say "Unknown publisher". From the release link, with the name still `Coodsz TAOM Client Launcher.exe`, choose **More info**, then **Run anyway**. If Defender says virus, delete it and tell me.
+
+# Do this
+1. Close Bannerlord.
+2. Open `Coodsz TAOM Client Launcher.exe` in that folder.
+3. Click **Check mods**, then **Install TAOM** once. If you already have 2.0.27 and compat 0.3.17, stop.
+4. Click **Use Coop 0.1.5** once. If Coop is already 0.1.5, stop.
+5. Direct connect: the host's IP, port `4200`, password only if the host set one. `127.0.0.1` is this computer only.
+6. Click **Connect**.
+
+# Repair TAOM
+
+Repair TAOM is only for a damaged module.
+
+# Do not
+- Do not use TAOM 2.0.28, 2.0.29, or any Coop other than 0.1.5.
+- Do not click **Restore previous Coop**. That switches off 0.1.5, and Connect will refuse to start.
+- Do not turn on Harmony, ButterLib, War Sails, or Steam relay.
+- Do not enlist or make a camp.
+- Do not click Install or Repair while Bannerlord is open.
+- Do not move the exe out of its folder, or share `taom-launcher.json`.
+
+
+PART 2 — host
+
+# Coodsz TAOM server tool
+
+Do the player steps first, so Bannerlord has the same modules. Download **Coodsz Dedicated TAOM Server Tool** from the same release. Unzip it to its own folder. Put the `TAOM-Coop-v0.3.17-CompatOnly-HOST` zip in your Downloads folder.
+
+# Do this
+1. Open `Coodsz Dedicated TAOM Server Tool.exe` inside that folder. Leave the other files beside it.
+2. Pick a real TAOM campaign save. A vanilla new game and `default_new_game` are refused.
+3. Click **Prepare server** once. If that folder is already prepared, leave it.
+4. Click **Start server**. Wait until the log says **SERVING**.
+5. Give players your IP address and UDP `4200`. Friends on another network need that port forwarded. `127.0.0.1` will not work for them.
+6. On the **Server** tab, under online players: **Refresh**, **Kick player**, **Ban player**, and **Unban player**. Banned names stay on the list. A banned player is kicked again while this tool is the program that started the server.
+
+# Password
+
+Type a password in the server tool if you want one, and give players that same password. An empty password is fine. The client writes it into `Coop.Core.dll` and keeps `Coop.Core.dll.pre-password.bak`. **Use Coop 0.1.5** puts the original 0.1.5 file back.
+
+# Do not
+- Do not prepare the server a second time over a folder that already has a host.
+- Do not start `BannerlordCoopServer.exe` yourself while also using this tool. Bans apply when this tool started the server.
+- Do not delete or rename single-player campaign saves. The tool copies the one save the server needs.
+- Do not send anyone your Documents\Mount and Blade II Bannerlord\Game Saves folder.
+- Do not share `taom-server.json`.
+- Do not give friends port `7210`. Players use `4200`.
+
+I will try my best to keep these updated and working with the latest release. Any bugs, challenges, feature ideas, or if you need help in any way, please let me know in this thread.
