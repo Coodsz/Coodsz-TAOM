@@ -31,7 +31,7 @@ If SmartScreen says "Unknown publisher", choose **More info**, then **Run anyway
 1. Close Bannerlord.
 2. Open `Coodsz TAOM Client Launcher.exe` in that folder.
 3. Click **Check mods**, then **Install TAOM**.
-4. Click **Use Coop 0.1.5** once. If Coop is already 0.1.5, stop.
+4. Click **Use Coop 0.1.5**. It checks that Workshop Coop 0.1.5 is already installed. It does not make another copy.
 5. Direct connect: the host's IP and port. Put a password only if the host has set one.
 6. Click **Connect**.
 
@@ -52,7 +52,7 @@ Do the player steps first, so Bannerlord has the same modules. Download **Coodsz
 
 # Do this
 1. Open `Coodsz Dedicated TAOM Server Tool.exe` inside that folder. Leave the other files beside it.
-2. Pick a real TAOM campaign save. A vanilla new game and `default_new_game` are refused.
+2. Pick a real TAOM campaign save. A vanilla new game and `default_new_game` are refused. **Start server** only loads a save already in the server Game Saves folder. If the line says Single player copy, click **Name server copy** first. Leave the name box blank to use that campaign's name.
 3. Click **Prepare server** once. If that folder is already prepared, leave it.
 4. Click **Start server**. Wait until the log says **SERVING**.
 5. Give players your port-forwarded IP address and UDP `4200`. Or use Steam. Give your friends your Steam name so they can connect.
@@ -60,7 +60,7 @@ Do the player steps first, so Bannerlord has the same modules. Download **Coodsz
 
 # Password
 
-Type a password in the server tool if you want one, and give players that same password. An empty password is fine. The client writes it into `Coop.Core.dll` and keeps `Coop.Core.dll.pre-password.bak`. **Use Coop 0.1.5** puts the original 0.1.5 file back.
+Type a password in the server tool if you want one, and give players that same password. An empty password is fine. The client writes it into `Coop.Core.dll` and keeps `Coop.Core.dll.pre-password.bak`.
 
 # Do not
 - Do not prepare the server a second time over a folder that already has a host.
@@ -96,6 +96,6 @@ Dragging the new files onto the old ones is the same thing. Close the tools firs
 - Do not download the compat zips again.
 - Do not delete the TAOM-Coop-Host folder or anything in Documents.
 
-The new programs do the new checks themselves. The client raises Low terrain to Medium when you click **Connect**. The server tool copies missing .NET 6 files into the server folder when you click **Start server**.
+The new programs do the new checks themselves. The client raises Low terrain to Medium when you click **Connect**. The server tool copies missing .NET 6 files into the server folder when you click **Start server**. **Start server** only loads a save already in the server Game Saves folder. **Name server copy** makes that copy, and a blank name uses the campaign name. **Use Coop 0.1.5** does not make a second Bannerlord Coop.
 
 I will try my best to keep these updated and working with the latest release. Any bugs, challenges, feature ideas, or if you need help in any way, please let me know in this thread.
