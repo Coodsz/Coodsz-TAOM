@@ -31,14 +31,15 @@ If SmartScreen says "Unknown publisher", choose **More info**, then **Run anyway
 1. Close Bannerlord.
 2. Open `Coodsz TAOM Client Launcher.exe` in that folder.
 3. Click **Check mods**, then **Install TAOM**.
-4. Click **Use Coop 0.1.5**. It checks that Workshop Coop 0.1.5 is already installed. It does not make another copy.
+4. Click **Use Coop 0.1.5**. If Modules\Coop is already 0.1.5, it leaves that folder. If another Coop version is in Modules\Coop and a 0.1.5 copy is parked beside it, this puts 0.1.5 into Modules\Coop and moves the other folder out of Modules. It does not make another copy.
 5. Direct connect: the host's IP and port. Put a password only if the host has set one.
 6. Click **Connect**.
+7. If the game closes, click **Save All Logs To One Zip** under **Check mods** and send that zip.
 
 # Do not
 - Do not unzip either compat zip, and do not copy them into Modules yourself.
 - Do not use TAOM 2.0.28, 2.0.29, or any Coop other than 0.1.5.
-- Do not click **Restore previous Coop**. That switches off 0.1.5.
+- Do not click **Use latest Coop**. That switches off 0.1.5.
 - Do not turn on Harmony, ButterLib, War Sails, or Steam relay.
 - Do not enlist or make a camp.
 - Do not click Install or Repair while Bannerlord is open. Repair is only for a damaged module.
@@ -96,6 +97,6 @@ Dragging the new files onto the old ones is the same thing. Close the tools firs
 - Do not download the compat zips again.
 - Do not delete the TAOM-Coop-Host folder or anything in Documents.
 
-The new programs do the new checks themselves. The client raises Low terrain to Medium when you click **Connect**. The server tool copies missing .NET 6 files into the server folder when you click **Start server**. **Start server** only loads a save already in the server Game Saves folder. **Name server copy** makes that copy, and a blank name uses the campaign name. **Use Coop 0.1.5** does not make a second Bannerlord Coop.
+The new programs do the new checks themselves. The client raises Low terrain to Medium when you click **Connect**. The server tool copies missing .NET 6 files into the server folder when you click **Start server**. **Start server** only loads a save already in the server Game Saves folder. **Name server copy** makes that copy, and a blank name uses the campaign name. **Use Coop 0.1.5** puts 0.1.5 into Modules\Coop when that folder is another version, and moves the other Coop folder out of Modules. It does not make a second copy. **Save All Logs To One Zip** packs the client logs into one file.
 
 I will try my best to keep these updated and working with the latest release. Any bugs, challenges, feature ideas, or if you need help in any way, please let me know in this thread.
