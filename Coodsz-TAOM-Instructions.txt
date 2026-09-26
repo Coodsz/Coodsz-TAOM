@@ -1,6 +1,6 @@
 Paste each part as its own Discord message. A line that starts with # is a big heading.
 
-# I made these tools for ease of access. I am not affiliated with the TAOM team. They are here so hosting and playing with friends is easier.
+# I made these tools with the help of the community and other sources for ease of access. I am not affiliated with the TAOM team in any way. They are here so hosting and playing with friends is easier.
 
 PART 1 — players
 
@@ -8,56 +8,54 @@ PART 1 — players
 
 You need Bannerlord **1.4.8** on Steam.
 
-Same set for everyone: TAOM **2.0.27**, TAOM_Map **2.0.27**, TAOM.Dependencies **2.0.26**, LOTRLOME_Armory **2.0.26**, Workshop Coop **0.1.5** (`3770450698`), TAOM.CoopCompat **0.3.17**. Direct connect, UDP `4200`, Steam relay off.
-
-This does not work with the latest TAOM update yet. It works with Coop 0.1.5.
+Same set for everyone: TAOM **2.0.27**, TAOM_Map **2.0.27**, TAOM.Dependencies **2.0.26**, LOTRLOME_Armory **2.0.26**, Workshop Coop **0.1.5**, TAOM.CoopCompat **0.3.17**. The latest TAOM update does not work yet.
 
 .NET 8 Desktop Runtime, x64:
 https://dotnet.microsoft.com/download/dotnet/8.0
 
 # Download
-1. Download **Coodsz TAOM Client Launcher** from the release page. Unzip it before you open it.
 https://github.com/Coodsz/Coodsz-TAOM/releases/latest
-2. Put these in Downloads, still zipped: the TAOM **2.0.27** archive (name contains `TAOM`, not 2.0.28 or CompatOnly) and `TAOM-Coop-v0.3.17-CompatOnly-CLIENT`.
-3. In Steam, subscribe to Workshop `3770450698` and wait for Coop **0.1.5**.
+
+1. Download **Coodsz TAOM Client Launcher**. Unzip it before you open it.
+2. Download `TAOM-Coop-v0.3.17-CompatOnly-CLIENT-PLAYTEST-36ae2c5a-d8a2ad02-r1.zip`. Leave it zipped in Downloads. Every player needs it. **Install TAOM** reads it from there.
+3. The host also downloads `TAOM-Coop-v0.3.17-CompatOnly-HOST-OPERATOR-36ae2c5a-d8a2ad02-r1.zip`. Leave that zipped in Downloads. **Prepare server** reads it from there.
+4. In Steam, subscribe to Workshop Coop `3770450698` and wait for Coop **0.1.5**.
+5. Download TAOM **2.0.27** and leave that zip in Downloads:
+https://www.moddb.com/mods/tales-from-the-age-of-men/downloads/taom-public-release-september-26-2027
 
 # If Windows warns you
 
-SmartScreen may say "Unknown publisher". From the release link, with the name still `Coodsz TAOM Client Launcher.exe`, choose **More info**, then **Run anyway**. If Defender says virus, delete it and tell me.
+If SmartScreen says "Unknown publisher", choose **More info**, then **Run anyway**. If Defender says virus, delete it and tell me.
 
 # Do this
 1. Close Bannerlord.
 2. Open `Coodsz TAOM Client Launcher.exe` in that folder.
-3. Click **Check mods**, then **Install TAOM** once. If you already have 2.0.27 and compat 0.3.17, stop.
+3. Click **Check mods**, then **Install TAOM**.
 4. Click **Use Coop 0.1.5** once. If Coop is already 0.1.5, stop.
-5. Direct connect: the host's IP, port `4200`, password only if the host set one. `127.0.0.1` is this computer only.
+5. Direct connect: the host's IP and port. Put a password only if the host has set one.
 6. Click **Connect**.
 
-# Repair TAOM
-
-Repair TAOM is only for a damaged module.
-
 # Do not
+- Do not unzip either compat zip, and do not copy them into Modules yourself.
 - Do not use TAOM 2.0.28, 2.0.29, or any Coop other than 0.1.5.
-- Do not click **Restore previous Coop**. That switches off 0.1.5, and Connect will refuse to start.
+- Do not click **Restore previous Coop**. That switches off 0.1.5.
 - Do not turn on Harmony, ButterLib, War Sails, or Steam relay.
 - Do not enlist or make a camp.
-- Do not click Install or Repair while Bannerlord is open.
-- Do not move the exe out of its folder, or share `taom-launcher.json`.
+- Do not click Install or Repair while Bannerlord is open. Repair is only for a damaged module.
 
 
 PART 2 — host
 
 # Coodsz TAOM server tool
 
-Do the player steps first, so Bannerlord has the same modules. Download **Coodsz Dedicated TAOM Server Tool** from the same release. Unzip it to its own folder. Put the `TAOM-Coop-v0.3.17-CompatOnly-HOST` zip in your Downloads folder.
+Do the player steps first, so Bannerlord has the same modules. Download **Coodsz Dedicated TAOM Server Tool** from the same release. Unzip it to its own folder. The host zip from Download step 3 must already be zipped in Downloads.
 
 # Do this
 1. Open `Coodsz Dedicated TAOM Server Tool.exe` inside that folder. Leave the other files beside it.
 2. Pick a real TAOM campaign save. A vanilla new game and `default_new_game` are refused.
 3. Click **Prepare server** once. If that folder is already prepared, leave it.
 4. Click **Start server**. Wait until the log says **SERVING**.
-5. Give players your IP address and UDP `4200`. Friends on another network need that port forwarded. `127.0.0.1` will not work for them.
+5. Give players your port-forwarded IP address and UDP `4200`. Or use Steam. Give your friends your Steam name so they can connect.
 6. On the **Server** tab, under online players: **Refresh**, **Kick player**, **Ban player**, and **Unban player**. Banned names stay on the list. A banned player is kicked again while this tool is the program that started the server.
 
 # Password
@@ -71,5 +69,33 @@ Type a password in the server tool if you want one, and give players that same p
 - Do not send anyone your Documents\Mount and Blade II Bannerlord\Game Saves folder.
 - Do not share `taom-server.json`.
 - Do not give friends port `7210`. Players use `4200`.
+
+I will try my best to keep these updated and working with the latest release. Any bugs, challenges, feature ideas, or if you need help in any way, please let me know in this thread.
+
+
+PART 3 — already have the tools
+
+# Update the tools
+
+You only replace the two programs. Do not delete the game, the mods, the server save, or the compat zips.
+
+# Do this
+
+1. Close the client launcher and the server tool. Close Bannerlord too.
+2. Download the new client zip and the new server zip:
+https://github.com/Coodsz/Coodsz-TAOM/releases/latest
+3. Unzip each one over the folder you already use. When Windows asks, choose **Replace**.
+4. Open the tools again.
+
+Dragging the new files onto the old ones is the same thing. Close the tools first, or Windows will not replace a file that is still open.
+
+# Do not
+
+- Do not delete the old folder first. Your saved paths and password sit next to the programs. A replace leaves those alone. Deleting the folder makes you type them in again.
+- Do not reinstall TAOM.
+- Do not download the compat zips again.
+- Do not delete the TAOM-Coop-Host folder or anything in Documents.
+
+The new programs do the new checks themselves. The client raises Low terrain to Medium when you click **Connect**. The server tool copies missing .NET 6 files into the server folder when you click **Start server**.
 
 I will try my best to keep these updated and working with the latest release. Any bugs, challenges, feature ideas, or if you need help in any way, please let me know in this thread.
