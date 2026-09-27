@@ -34,9 +34,10 @@ If SmartScreen says "Unknown publisher", choose **More info**, then **Run anyway
 4. Click **Use Coop 0.1.5**. If Modules\Coop is already 0.1.5, it leaves that folder. If another Coop version is in Modules\Coop and a 0.1.5 copy is parked beside it, this puts 0.1.5 into Modules\Coop and moves the other folder out of Modules. It does not make another copy.
 5. Direct connect: the host's IP and port. Put a password only if the host has set one.
 6. Click **Connect**.
-7. If the game closes, click **Save All Logs To One Zip** under **Check mods** and send that zip.
-8. If the game says it cannot load a DLL and the message includes the folder path, click **Unblock DLLs**. That clears the Windows download mark under Modules. It does not change the mod files.
-9. **Clear shader cache** deletes only the shader folder in ProgramData. Close Bannerlord first. It does not touch mods or saves.
+7. If the game closes, click **Save All Logs To One Zip** and send that zip. It includes the Coop crash report and the crash dump. Saves are left out.
+8. If the game is choppy after you connect, click **Fix low FPS**. Close Bannerlord if it is open, then click **Connect** again. **Undo FPS fix** puts the patch shield back if that click was a mistake.
+9. If the game says it cannot load a DLL and the message includes the folder path, click **Unblock DLLs**. That clears the Windows download mark under Modules. It does not change the mod files.
+10. **Clear shader cache** deletes only the shader folder in ProgramData. Close Bannerlord first. It does not touch mods or saves. There is no undo. The game builds the shaders again the next time it starts.
 
 # Do not
 - Do not unzip either compat zip, and do not copy them into Modules yourself.
@@ -59,8 +60,9 @@ Do the player steps first, so Bannerlord has the same modules. Download **Coodsz
 3. Click **Prepare server** once. If that folder is already prepared, leave it.
 4. Click **Start server**. Wait until the log says **SERVING**.
 5. If the server tool says it cannot load a DLL and the message includes the folder path, click **Unblock DLLs** in the server tool. That clears the Windows download mark in the server folder. A startup line that only says `Cannot load: SandBox.dll` is not a blocked file, and it does not replace **SERVING**.
-6. Give players your port-forwarded IP address and UDP `4200`. Or use Steam. Give your friends your Steam name so they can connect.
-7. On the **Server** tab, under online players: **Refresh**, **Kick player**, **Ban player**, and **Unban player**. Banned names stay on the list. A banned player is kicked again while this tool is the program that started the server.
+6. **Save engine logs** packs the engine log, the TAOM debug log, and the coop server logs into one zip. The save and any crash dump are left out. The password is removed.
+7. Give players your port-forwarded IP address and UDP `4200`. Or use Steam. Give your friends your Steam name so they can connect.
+8. On the **Server** tab, under online players: **Refresh**, **Kick player**, **Ban player**, and **Unban player**. Banned names stay on the list. A banned player is kicked again while this tool is the program that started the server.
 
 # Password
 
@@ -101,6 +103,6 @@ Dragging the new files onto the old ones is the same thing. Close the tools firs
 - Do not download the compat zips again.
 - Do not delete the TAOM-Coop-Host folder or anything in Documents.
 
-The new programs do the new checks themselves. The client raises Low terrain to Medium when you click **Connect**. The server tool copies missing .NET 6 files into the server folder when you click **Start server**. **Start server** only loads a save already in the server Game Saves folder. **Name server copy** makes that copy, and a blank name uses the campaign name. **Use Coop 0.1.5** puts 0.1.5 into Modules\Coop when that folder is another version, and moves the other Coop folder out of Modules. It does not make a second copy. **Save All Logs To One Zip** packs the client logs into one file. **Unblock DLLs** clears the Windows download mark. On the client that folder is Modules. On the server tool that folder is the server folder. It does not change the mod files. **Clear shader cache** deletes only the shader folder in ProgramData. Close Bannerlord first. It does not touch mods or saves. If `Coop.Core.dll` was edited for a password, the client puts the pinned 0.1.5 file back, and the server tool does the same on **Start server**. That edit crashes TAOM.CoopCompat. When a newer release is published, the tool writes one line that a new version is available. That line does not change the game, the mods, the server, or the save. After you replace the program and open the new copy, the line is gone.
+The new programs do the new checks themselves. The client raises Low terrain to Medium when you click **Connect**. The server tool copies missing .NET 6 files into the server folder when you click **Start server**. **Start server** only loads a save already in the server Game Saves folder. **Name server copy** makes that copy, and a blank name uses the campaign name. **Use Coop 0.1.5** puts 0.1.5 into Modules\Coop when that folder is another version, and moves the other Coop folder out of Modules. It does not make a second copy. **Save All Logs To One Zip** packs the client logs, the Coop crash report, and the crash dump into one file. Saves are left out. **Fix low FPS** turns off TAOM's patch shield. Close Bannerlord if it is open, then click **Connect** again. **Undo FPS fix** puts the patch shield back. **Save engine logs** on the server tool packs the host logs and removes the password. The save and any crash dump are left out. **Unblock DLLs** clears the Windows download mark. On the client that folder is Modules. On the server tool that folder is the server folder. It does not change the mod files. **Clear shader cache** deletes only the shader folder in ProgramData. Close Bannerlord first. It does not touch mods or saves. If `Coop.Core.dll` was edited for a password, the client puts the pinned 0.1.5 file back, and the server tool does the same on **Start server**. That edit crashes TAOM.CoopCompat. When a newer release is published, the tool writes one line that a new version is available. That line does not change the game, the mods, the server, or the save. After you replace the program and open the new copy, the line is gone.
 
 I will try my best to keep these updated and working with the latest release. Any bugs, challenges, feature ideas, or if you need help in any way, please let me know in this thread.
