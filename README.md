@@ -11,9 +11,13 @@ Download the programs from the [latest release](https://github.com/Coodsz/Coodsz
 - Players: `Coodsz-TAOM-Client-Launcher.zip`
 - The person hosting also downloads `Coodsz-Dedicated-TAOM-Server-Tool.zip`
 
+Already have the tools? Click **Install update** in the tool when it shows up. It shows a progress bar, then the tool closes and opens again on the new copy. Your saved paths and password stay. The first time you move to a copy that has this button, unzip the new programs over your folder once by hand and choose **Replace**.
+
 You need your own legal Steam copy of Bannerlord 1.4.8, the TAOM 2.0.27 modules, Workshop Coop 0.1.5, and the matching TAOM.CoopCompat 0.3.17 zip. Those are not included here.
 
-Leave `TAOM-Coop-v0.3.17-CompatOnly-CLIENT` zipped in your Downloads folder. Do not copy it into Bannerlord yourself. Install TAOM in the client launcher puts TAOM.CoopCompat into the game's Modules folder. The host leaves `TAOM-Coop-v0.3.17-CompatOnly-HOST` zipped in Downloads. Prepare server reads it from there.
+Every player downloads `TAOM-Coop-v0.3.17-CompatOnly-CLIENT-PLAYTEST-36ae2c5a-d8a2ad02-r1.zip` and leaves it zipped, anywhere on the PC (the Desktop is fine). Do not copy it into Bannerlord yourself. **Install TAOM** in the client launcher finds it and puts TAOM.CoopCompat into the game's Modules folder. The host also downloads `TAOM-Coop-v0.3.17-CompatOnly-HOST-OPERATOR-36ae2c5a-d8a2ad02-r1.zip` and leaves it zipped anywhere on the PC. **Prepare server** finds it there.
+
+Download TAOM 2.0.27 from ModDB and leave that zip anywhere on the PC: https://www.moddb.com/mods/tales-from-the-age-of-men/downloads/taom-public-release-september-26-2027
 
 Install the .NET 8 Desktop Runtime, x64, if Windows asks for it: https://dotnet.microsoft.com/download/dotnet/8.0
 
