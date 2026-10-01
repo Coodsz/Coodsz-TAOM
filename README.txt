@@ -2,6 +2,8 @@ Paste each part as its own Discord message. A line that starts with # is a big h
 
 # I made these tools with the help of the community and other sources for ease of access. I am not affiliated with the TAOM team in any way. They are here so hosting and playing with friends is easier.
 
+Coodsz Coop and Friends players: see PART 4.
+
 PART 1 — players
 
 # Coodsz TAOM
@@ -100,8 +102,6 @@ The first time you move to a copy that has this button, replace the programs onc
 
 # Do this by hand, if the button is not there yet
 
-You only replace the two programs. Do not delete the game, the mods, the server save, or the compat zips.
-
 1. Close the client launcher and the server tool. Close Bannerlord too.
 2. Download the new client zip and the new server zip:
 https://github.com/Coodsz/Coodsz-TAOM/releases/latest
@@ -118,5 +118,68 @@ Dragging the new files onto the old ones is the same thing. Close the tools firs
 - Do not delete the TAOM-Coop-Host folder or anything in Documents.
 
 The new programs do the new checks themselves. The client raises Low terrain to Medium when you click **Connect**. The server tool copies missing .NET 6 files into the server folder when you click **Start server**. **Start server** only loads a save already in the server Game Saves folder. **Name server copy** makes that copy, and a blank name uses the campaign name. **Use Coop 0.1.5** puts 0.1.5 into Modules\Coop when that folder is another version, and moves the other Coop folder out of Modules. It does not make a second copy. **Open client logs** selects Coop_client.log and client-action.log. **Save All Logs To One Zip** packs Coop_client.log, client-action.log, the activity log, crash reports, engine logs, TAOM.CoopCompat logs, and the crash dump when present. Saves are left out. **Fix low FPS** turns off TAOM's patch shield. Close Bannerlord if it is open, then click **Connect** again. **Undo FPS fix** puts the patch shield back. **Save engine logs** on the server tool packs the host logs and removes the password. The save and any crash dump are left out. **Unblock DLLs** clears the Windows download mark. On the client it is the first Setup button. Until you have used it once, it pulses and the first **Connect** waits for it. There the folder is Modules. On the server tool that folder is the server folder. That button turns red when Windows blocked a DLL. It does not change the mod files. **Clear shader cache** deletes only the shader folder in ProgramData. Close Bannerlord first. It does not touch mods or saves. If `Coop.Core.dll` was edited for a password, the client puts the pinned 0.1.5 file back, and the server tool does the same on **Start server**. That edit crashes TAOM.CoopCompat. **Install update** replaces the program only. It does not change the game, the mods, the server, or the save. After the new copy opens, the line and the button are gone until the next release.
+
+I will try my best to keep these updated and working with the latest release. Any bugs, challenges, feature ideas, or if you need help in any way, please let me know in this thread.
+
+
+PART 4 — Coodsz Coop and Friends
+
+# Coodsz Coop and Friends players start here
+
+These are the tools for a normal Coop game, and for a TAOM map game that is not using the dedicated TAOM server tool above. Same Bannerlord **1.4.8**. Same .NET 8 Desktop Runtime, x64.
+
+# Download
+https://github.com/Coodsz/Coodsz-Coop-and-Friends/releases/latest
+
+Unzip the zip before you open anything. You get these program folders:
+
+- `Coodsz Coop and Friends` — players on the vanilla map. Open `Coodsz Coop and Friends.exe`.
+- `Coodsz and Friends` — players on the TAOM map. Open `Coodsz and Friends.exe`.
+- `Coodsz Host` — the host. Open `CoodszHost.exe`. The window title is Coodsz and Friends Server Coop Manager Dedicated Tool.
+
+# Players
+1. Close Bannerlord.
+2. Open the launcher that matches the map you are playing.
+3. Under **Saved setup**, pick your setup. The **Campaign map** box switches to the map that setup saved. Default and custom setups load their own map. The locked Vanilla setup loads the vanilla map. The locked More Nations setup loads the Remastered map. Saved paths and cheats stay.
+4. Steam lobby: put the host's Steam name in the Steam lobby box and connect from the lobby.
+5. Direct connect: put the host's address and UDP port in the direct boxes. A home address only works on the same network. A port-forwarded address is what friends off that network use.
+6. Click connect. If Windows says Unknown publisher, choose More info, then Run anyway.
+7. If the game says it cannot load a DLL, click **Unblock DLLs**. That button turns red when Windows blocks a DLL. Click it, then connect again.
+8. **Add mods** opens mods already on this PC (Workshop, Nexus, ModDB folders). It does not download anything. Locked setups refuse Add mods. **Install mods** is the button that opens Steam for Workshop mods that are missing from the game's Modules folder.
+9. **Crash logs** is highlighted. That click opens Coop_client.log and a dated client-action.log copy for Discord, or Coop Crash Reports if the game folder is missing. It also opens the hard-crash folder. client-action.log sits next to the launcher and records Connect, Unblock, Crash logs, Save All Logs, and the other key clicks. Passwords, addresses, and Steam IDs are removed.
+10. **Save All Logs To One Zip** is highlighted. It is the full pack: Coop_client.log, client-action.log, crash reports, engine logs, and hard crashes. Saves are left out. Send that zip.
+
+# Host
+1. Do the player steps first so Bannerlord has the same modules.
+2. Open `CoodszHost.exe`.
+3. Pick the save the server should load. Start server only loads a save the server already has. For More Nations Remastered, make the campaign in single player with that locked setup, then click Load single-player save and pick that .sav. The single-player file stays where it is. A campaign the server creates itself leaves the ground black. A vanilla or other-mod save stays that map. A server that is already running keeps its current campaign until you stop it and press Start server.
+4. The host has its own **Campaign map** box on the server page. Choosing a saved setup switches it to the map that setup saved. Default and custom setups load their own map. The locked Vanilla setup loads the vanilla map. The locked More Nations setup loads the Remastered map. Saved paths and cheats stay.
+5. **Region** is on the server page: EU, NA, AS, OC, SA, or AF. Pick the region that matches your players.
+6. **Set server folder** chooses which BannerlordCoopServer.exe this tool starts. Use it when the dedicated server was not found, or this tool found the wrong copy. The file is in Modules\Bannerlord Coop\DedicatedServer, or in Workshop folder 3770450698\DedicatedServer.
+7. Click **Start server**. Wait until it is serving. Closing the host and opening it again still shows SERVING when the server is running.
+   - On Start server, Host copies any missing starter files into the DedicatedServer folder from its own DedicatedServerRepair pack (Start-ModdedServer.ps1, 0Harmony.dll, and the other starter files). Files you already have are left alone.
+   - Host will not start bare BannerlordCoopServer.exe when Start-ModdedServer.ps1 is missing. That bare start only loaded 5 core mods and broke joins.
+   - The Modules tab shows how many mods are on. That start writes the locked setup's module list, including MCM and the framework mods when those folders are present. If a player is told the server does not support their modules, pick that same locked setup and press **Start server** again.
+   - Locked setups keep CoopNightly off and use stable Coop. On a normal setup, Bannerlord Coop can be Coop or CoopNightly. Host parks the extra copy so only one loads.
+   - If two enabled mods ship different copies of the same DLL (for example 0Harmony.dll), Start server prints a duplicate-DLL warning. Keep one copy, move the extra out of the other mod's bin folder, then Start server again. Do not delete the whole mod folder.
+   - If the join says the Bannerlord builds do not match, update Steam Workshop item 3770450698. Do not copy the game folder onto the dedicated server.
+   - If the server cannot load a DLL, click **Unblock DLLs** in `CoodszHost.exe`. That button turns red when the server log says Windows blocked a DLL.
+   - **Open server logs** is highlighted under Server controls. That click opens the logs folder and selects the newest coop-server log plus a dated host-action-*.log copy for Discord (not the plain host-action.log).
+8. Give players your address and port, or your Steam name for the lobby.
+9. The server buttons are **Start server**, **Save**, **Restart**, then **Stop**. **Save** keeps the server up and players connected.
+10. Fast forward and the other Settings values use **Save settings**, then restart the server. **Save settings** works on locked setups too. It writes the difficulty and server options. It does not unlock or change the locked mod list. A running server keeps the old values until that restart.
+11. **Load single-player MCM** copies single-player MCM settings into this setup. The single-player files stay. A server that is already running keeps its current MCM until you stop it and press Start server.
+12. If the campaign looks broken, the tool will not write over the last playable save. Leave autosave off while you are checking that world.
+13. On **Cheats**, pick the player from the list. Commands are sent only when this tool started the server. If it did not, the tool says so. Restart the server from this tool, then send the command again. That restart disconnects players while the same save loads.
+
+# Update
+When a newer release is out, the tool shows a line and an **Install update** button. The button stays highlighted until you click it. Click it. The button says **Installing**, and a progress bar moves while the download runs. When it is done, the tool closes and opens again on the new copy. If a program file is still locked, it is moved aside and the new copy starts. The previous program files are removed after the new copy is in place. Your saved paths, cheats, and mod folders stay. A dedicated server that is already running stays up.
+
+The first time you move to a copy that has this button, replace the programs once by hand. Close the tools first. Unzip the new zip over the folder you already use and choose Replace. Do not delete the old folder first. Deleting it makes you type the paths in again.
+
+# Do not
+- Do not delete the game, the mods, or the server save to update the tool.
+- Do not start the Coop server exe yourself while also using this tool.
+- Do not share your settings json. It sits next to the program and holds your paths.
 
 I will try my best to keep these updated and working with the latest release. Any bugs, challenges, feature ideas, or if you need help in any way, please let me know in this thread.
