@@ -19,7 +19,7 @@ https://github.com/Coodsz/Coodsz-TAOM/releases/latest
 1. Download **Coodsz TAOM Client Launcher**. Unzip it before you open it.
 2. Download `TAOM-Coop-v0.3.17-CompatOnly-CLIENT-PLAYTEST-36ae2c5a-d8a2ad02-r1.zip`. Leave it zipped. Every player needs it. **Install TAOM** finds it anywhere on this PC, including the Desktop.
 3. The host also downloads `TAOM-Coop-v0.3.17-CompatOnly-HOST-OPERATOR-36ae2c5a-d8a2ad02-r1.zip`. Leave that zipped. **Prepare server** finds it anywhere on this PC, including the Desktop.
-4. In Steam, subscribe to Workshop Coop `3770450698` and wait for Coop **0.1.5**. If you skip this, **Switch to Coop 0.1.5** asks Steam to subscribe and download it for you.
+4. Coop **0.1.5** is no longer on the Steam Workshop. Steam now downloads Coop **0.1.6**, and TAOM.CoopCompat 0.3.17 only works with 0.1.5. If you already have Coop 0.1.5 in `Modules\Coop` or `Modules\Coop-playtest-0.1.5`, keep it and do not delete it. If you do not have it, ask the host before you go on.
 5. Download TAOM **2.0.27** and leave that zip anywhere on this PC:
 https://www.moddb.com/mods/tales-from-the-age-of-men/downloads/taom-public-release-september-26-2027
 
@@ -46,7 +46,7 @@ If SmartScreen says "Unknown publisher", choose **More info**, then **Run anyway
 
 # Do not
 - Do not unzip either compat zip, and do not copy them into Modules yourself.
-- Do not use TAOM 2.0.28, 2.0.29, or any Coop other than 0.1.5.
+- Do not use TAOM 2.0.28, 2.0.29, or any Coop other than 0.1.5. Coop 0.1.6 from the Workshop does not work with TAOM yet.
 - Do not click **Restore parked Coop**. That puts the newer Coop back and switches off 0.1.5.
 - Do not turn on Harmony, ButterLib, War Sails, or Steam relay.
 - Do not enlist or make a camp.
