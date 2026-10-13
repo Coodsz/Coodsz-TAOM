@@ -6,7 +6,7 @@ PART 1 — players
 
 # Coodsz TAOM
 
-Tools version: **v1.1.20** (Client Launcher and Dedicated Server Tool), for **TAOM-Coop 0.3.25**.
+Tools version: **v1.1.21** (Client Launcher and Dedicated Server Tool), for **TAOM-Coop 0.3.25**.
 
 You need Bannerlord **1.4.8** on Steam.
 
