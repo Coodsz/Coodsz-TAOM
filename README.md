@@ -4,12 +4,12 @@ Client launcher and dedicated server tool for playing Mount & Blade II: Bannerlo
 
 I made these tools for ease of access. I am not affiliated with the TAOM team. They are here so hosting and playing with friends is easier.
 
-Tools **v1.1.21**. Works with Bannerlord **1.4.8**, TAOM **2.0.29.5** (all four modules), Workshop Coop **0.1.6**, and TAOM.CoopCompat **0.3.25**. TAOM 2.0.27 campaigns do not load on 2.0.29.5, so start a new campaign.
+Tools **v1.1.22**. Works with Bannerlord **1.4.8**, TAOM **2.0.29.5** (all four modules), Workshop Coop **0.1.6**, and TAOM.CoopCompat **0.3.25**. TAOM 2.0.27 campaigns do not load on 2.0.29.5, so start a new campaign.
 
 Download the programs from the [latest release](https://github.com/Coodsz/Coodsz-TAOM/releases/latest).
 
-- Players: `Coodsz-TAOM-Client-Launcher-v1.1.21.zip`
-- The person hosting also downloads `Coodsz-Dedicated-TAOM-Server-Tool-v1.1.21.zip`
+- Players: `Coodsz-TAOM-Client-Launcher-v1.1.22.zip`
+- The person hosting also downloads `Coodsz-Dedicated-TAOM-Server-Tool-v1.1.22.zip`
 
 Already have the tools? Click **Install update** in the tool when it shows up. It shows a progress bar, then the tool closes and opens again on the new copy. Your saved paths and password stay. The first time you move to a copy that has this button, unzip the new programs over your folder once by hand and choose **Replace**.
 
