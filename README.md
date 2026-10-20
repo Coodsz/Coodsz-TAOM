@@ -26,3 +26,12 @@ Click **Unblock DLLs** before the first Connect. That button turns red when Wind
 On the host tool, wait until the log says **SERVING**. Closing the host and opening it again still shows SERVING when that server is still running. **Open server logs** highlights a dated `host-action-*.log` copy for Discord.
 
 How to install, join, and host is in `Coodsz-TAOM-Instructions.txt`, and the same steps are in `README.txt` in each release (**PART 1** through **PART 3**).
+
+
+## License
+
+These tools are free to use for playing and hosting Bannerlord Coop with your friends and community. All rights reserved by Coodsz.
+
+Without written permission you may not use them to make money (paid servers, server rental, paid or donation locked access, selling or bundling), decompile or copy how they work to make a similar tool, upload them anywhere other than these GitHub releases, or share changed copies. To ask, contact Coodsz on Discord (Coodsz) or on GitHub (github.com/Coodsz).
+
+The full text is in [LICENSE.txt](LICENSE.txt). Code from other people keeps its own license (see THIRD-PARTY-NOTICES.md where present), and bundled mods stay under their authors' terms.

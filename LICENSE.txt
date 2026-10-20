@@ -1,0 +1,18 @@
+Coodsz Coop Tools License
+Copyright (c) 2026 Coodsz. All rights reserved.
+
+This license covers Coodsz Coop and Friends, Coodsz Host, the Coodsz TAOM tools and the Coodsz AD1259 tools.
+
+You may download and use these tools for free to play and host Bannerlord Coop games with your friends and community.
+
+Without written permission from Coodsz you may not
+1. Use the tools to make money, including paid servers, server rental, paid or donation locked access, or selling or bundling the tools.
+2. Decompile, disassemble or reverse engineer the tools, or copy how they work to make your own or a similar tool.
+3. Share, upload or host the tools anywhere other than Coodsz's official GitHub releases.
+4. Change the tools and share them, or present them as your own work.
+
+To ask for permission, contact Coodsz on Discord (Coodsz) or on GitHub (github.com/Coodsz).
+
+Parts of the tools use code from other people under their own licenses (see THIRD-PARTY-NOTICES.md), and bundled mods stay under their authors' terms. This license does not change those.
+
+The tools are provided as is, without any warranty. Coodsz is not responsible for any damage, lost saves or other problems from using them.
