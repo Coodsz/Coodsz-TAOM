@@ -1,0 +1,65 @@
+# Adapted from CoopKeep (https://github.com/Aderimo/bannerlord-coopkeep), MIT,
+# Copyright (c) 2026 aderimo. See THIRD-PARTY-NOTICES.md.
+#
+# The TAOM mod report form for Coodsz/Coodsz-TAOM. .github/scripts/tally-taom-compat.mjs counts
+# these into compat/taom-mod-compat.json and MODS.md.
+name: TAOM mod report
+description: Tell us whether a mod works with TAOM in Coop
+title: "[Mod] "
+labels: ["mod-compat", "taom"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please only report what you really tested with TAOM. Without a GitHub account, use **Report a mod** in the Coodsz TAOM Client Launcher instead.
+        Your report shows as a player count next to this mod on the [TAOM mod list](https://github.com/Coodsz/Coodsz-TAOM/blob/main/MODS.md). The status stays what Coodsz checked.
+  - type: input
+    id: mod_id
+    attributes:
+      label: Mod id
+      description: The Module Id, as shown under the mod's name in the TAOM tools (or the Id in the mod's SubModule.xml)
+    validations:
+      required: true
+  - type: input
+    id: mod_name
+    attributes:
+      label: Mod name
+      description: The mod's display name, if you know it
+  - type: input
+    id: mod_version
+    attributes:
+      label: Mod version
+  # The option texts have to match what .github/scripts/tally-mod-compat.mjs (normalizeResult) reads.
+  - type: dropdown
+    id: status
+    attributes:
+      label: Result
+      options:
+        - works
+        - broken
+        - client-only
+    validations:
+      required: true
+  - type: input
+    id: taom_version
+    attributes:
+      label: TAOM version
+      placeholder: "2.0.29.5"
+    validations:
+      required: true
+  - type: input
+    id: coop_version
+    attributes:
+      label: Coop version
+      placeholder: "v0.1.6"
+  - type: input
+    id: game_version
+    attributes:
+      label: Bannerlord version
+      placeholder: "v1.4.8"
+  - type: textarea
+    id: details
+    attributes:
+      label: What happened?
+      description: |
+        The error message, when it happened (joining, a battle, a siege), and whether the mod was on for the host, the players or both.
