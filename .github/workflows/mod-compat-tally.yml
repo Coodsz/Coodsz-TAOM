@@ -28,6 +28,9 @@ on:
     paths:
       - compat/taom-mod-compat.json
       - .github/scripts/tally-taom-compat.mjs
+      # It imports these two, so a copy of them writes the counts and MODS.md again too.
+      - .github/scripts/tally-mod-compat.mjs
+      - .github/scripts/compat-records.mjs
   workflow_dispatch:
   # Called by auto-approve-reports.yml after it approved reports.
   workflow_call:

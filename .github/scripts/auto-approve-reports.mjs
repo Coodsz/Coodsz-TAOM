@@ -7,9 +7,10 @@
 // The wait counts from the issue's last change (updated_at), so a vote a player changed (the worker
 // edits the issue and adds "pending" again) waits a full day again too.
 //
-// Runs from .github/workflows/auto-approve-reports.yml every hour, in Coodsz-Coop-and-Friends and in
-// Coodsz-TAOM (where the worker files the TAOM reports). AD1259 reports get approved the same way;
-// the tally leaves them out of compat-list/mods.json anyway.
+// Runs from .github/workflows/auto-approve-reports.yml every hour, in Coodsz-Coop-and-Friends, in
+// Coodsz-TAOM and in Coodsz-AD1259 (where the worker files the TAOM and the AD1259 reports). Older
+// TAOM and AD1259 reports in Coodsz-Coop-and-Friends get approved the same way; the tally there
+// leaves them out of compat-list/mods.json anyway.
 //
 // Usage:
 //   node auto-approve-reports.mjs [--dry-run]

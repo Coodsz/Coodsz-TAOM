@@ -1,15 +1,17 @@
-// The TAOM community list: counts the approved TAOM mod reports into compat/taom-mod-compat.json
-// and writes MODS.md, the readable page, in the Coodsz/Coodsz-TAOM repository.
+// The TAOM and AD1259 community lists: counts the approved mod reports of one tool into its list
+// file and writes MODS.md, the readable page, in that tool's repository:
+//   --list taom    (default) compat/taom-mod-compat.json in Coodsz/Coodsz-TAOM
+//   --list ad1259  compat/ad1259-mod-compat.json in Coodsz/Coodsz-AD1259 (the fixed AD1259 pack)
 //
-// The reports are the one click reports the TAOM tools send through server/mod-reports-worker
-// (labels mod-compat, mod-report, pending, taom; they count once pending is removed, by Coodsz
-// or by the hourly auto approval, auto-approve-reports.mjs) and the TAOM issue form
-// (labels mod-compat and taom, taom-compat/.github/ISSUE_TEMPLATE/mod-compat.yml in the
-// launcher repository). Reading the issues and picking the latest vote per person and mod is the
-// same as the Coop and Friends tally (collectReports in tally-mod-compat.mjs): pending, invalid
-// and spam reports do not count.
+// The reports are the one click reports the tools send through server/mod-reports-worker
+// (labels mod-compat, mod-report, pending and taom or ad1259; they count once pending is removed,
+// by Coodsz or by the hourly auto approval, auto-approve-reports.mjs) and the tool's issue form
+// (labels mod-compat and taom or ad1259, taom-compat/ and ad1259-compat/.github/ISSUE_TEMPLATE/
+// mod-compat.yml in the launcher repository). Reading the issues and picking the latest vote per
+// person and mod is the same as the Coop and Friends tally (collectReports in tally-mod-compat.mjs):
+// pending, invalid and spam reports do not count.
 //
-// The hand checked fields stay Coodsz's: id, name, workshopId, nexusId, tag, class,
+// The hand checked fields stay Coodsz's: id, name, version, workshopId, nexusId, tag, class,
 // clientOnlyOnServer, hasServerBuild, source, checked and note are never changed, and the tag
 // never moves on its own. The tally only sets these count fields on each entry:
 //   works       players who said it works (Works only with counts here too)
@@ -19,13 +21,13 @@
 // An entry with no counted report has none of them. Reported mods that are not on the list go
 // into a separate "community" array next to "mods" with the same count fields, so the tools,
 // which read only "mods", never show a badge Coodsz did not give. The TAOM tools skip fields
-// they do not know (System.Text.Json), so schemaVersion stays 2.
+// they do not know (System.Text.Json), so schemaVersion stays 2. No tool reads the AD1259 file yet.
 //
 // Every run counts all reports again; running twice on the same input gives the same files.
 //
 // Usage:
-//   node tally-taom-compat.mjs [--file compat/taom-mod-compat.json] [--page MODS.md] [--issues fixture.json] [--dry-run]
-//   node tally-taom-compat.mjs --page-only [--file ...] [--page ...]   (only writes MODS.md from the file as it is)
+//   node tally-taom-compat.mjs [--list taom|ad1259] [--file <list file>] [--page MODS.md] [--issues fixture.json] [--dry-run]
+//   node tally-taom-compat.mjs --page-only [--list ...] [--file ...] [--page ...]   (only writes MODS.md from the file as it is)
 //
 // Without --issues the issues come from the GitHub API (GITHUB_TOKEN and GITHUB_REPOSITORY).
 // It imports tally-mod-compat.mjs (which imports compat-records.mjs), so both sit next to it.
@@ -33,12 +35,14 @@
 
 import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { collectReports, fetchIssues, AD1259_LABEL } from './tally-mod-compat.mjs';
+import { collectReports, fetchIssues, mdCell, mdModLink, countsText, writeIfChanged, TAOM_LABEL, AD1259_LABEL, NOT_CHECKED } from './tally-mod-compat.mjs';
 
+export { NOT_CHECKED };
 export const COUNT_KEYS = ['works', 'broken', 'clientOnly', 'lastReport'];
 export const REPORT_FORM_URL = 'https://github.com/Coodsz/Coodsz-TAOM/issues/new?template=mod-compat.yml';
+export const AD1259_REPORT_FORM_URL = 'https://github.com/Coodsz/Coodsz-AD1259/issues/new?template=mod-compat.yml';
 
-// The plain words for each tag, in the order MODS.md lists them.
+// The plain words for each TAOM tag, in the order MODS.md lists them.
 export const STATUS = [
   ['safe', 'Works'],
   ['everyone', 'Everyone needs it'],
@@ -47,9 +51,17 @@ export const STATUS = [
   ['risky', 'Risky'],
   ['broken', 'Broken'],
 ];
-export const NOT_CHECKED = 'Not checked yet';
+
+// The AD1259 tags: the pack mods, then extra mods Coodsz checked with the pack.
+export const AD1259_STATUS = [
+  ['pack', 'In the pack'],
+  ['safe', 'Works'],
+  ['risky', 'Risky'],
+  ['broken', 'Broken'],
+];
 
 const keyOf = s => String(s ?? '').trim().toLowerCase();
+const dayOf = s => (/^\d{4}-\d{2}-\d{2}$/.test(s ?? '') ? s : '');
 
 /** The list entry a report is about: by module id, else by name for an entry without an id. */
 function findEntry(mods, report) {
@@ -72,6 +84,7 @@ function setCounts(entry, c) {
 /**
  * Sets the count fields on doc.mods and rebuilds doc.community from the counted reports. Only the
  * count fields change. Returns the ids of the reported mods that are not on the hand list.
+ * The same for the TAOM and the AD1259 list.
  */
 export function applyTaomTally(doc, reports) {
   doc.mods ??= [];
@@ -130,80 +143,146 @@ export function serializeTaom(doc, nl = '\n') {
 
 // ---- MODS.md ------------------------------------------------------------
 
-export function statusText(tag) {
-  return STATUS.find(([t]) => t === keyOf(tag))?.[1] ?? NOT_CHECKED;
+/** The status words of a tag, in the TAOM list unless another list's statuses are passed. */
+export function statusText(tag, statuses) {
+  if (!Array.isArray(statuses)) statuses = STATUS;
+  return statuses.find(([t]) => t === keyOf(tag))?.[1] ?? NOT_CHECKED;
 }
 
-const statusRank = tag => { const i = STATUS.findIndex(([t]) => t === keyOf(tag)); return i < 0 ? STATUS.length : i; };
+const statusRank = (tag, statuses) => { const i = statuses.findIndex(([t]) => t === keyOf(tag)); return i < 0 ? statuses.length : i; };
 
-/** Text for a table cell: no line breaks, no pipes, no HTML. */
-function cell(text) {
-  return String(text ?? '').replace(/\r?\n/g, ' ').replace(/\|/g, '\\|').replace(/</g, '&lt;').trim();
-}
-
-function modCell(e) {
-  const name = cell(e.name || e.id || e.workshopId).replace(/([[\]])/g, '\\$1');
-  if (/^\d{1,20}$/.test(e.workshopId ?? '')) return `[${name}](https://steamcommunity.com/sharedfiles/filedetails/?id=${e.workshopId})`;
-  if (/^\d{1,10}$/.test(e.nexusId ?? '')) return `[${name}](https://www.nexusmods.com/mountandblade2bannerlord/mods/${e.nexusId})`;
-  return name;
-}
+const modCell = e => mdModLink(e.name || e.id || e.workshopId, e.workshopId, e.nexusId);
 
 export function playersCell(e) {
   if (e.works === undefined && e.broken === undefined && !e.clientOnly) return '';
-  const parts = [`${e.works ?? 0} works`, `${e.broken ?? 0} broken`];
-  if (e.clientOnly) parts.push(`${e.clientOnly} client only`);
-  return parts.join(', ');
+  return countsText(e.works, e.broken, e.clientOnly);
 }
 
 /** The day Coodsz checked it himself: in Coop, or with the automatic server load test. */
 export function checkedCell(e) {
-  const day = /^\d{4}-\d{2}-\d{2}$/.test(e.checked ?? '') ? e.checked : '';
+  const day = dayOf(e.checked);
   if (!day) return '';
   if (keyOf(e.source) === 'coodsz-coop') return day;
   if (keyOf(e.source) === 'server-loads') return `${day} (server load test)`;
   return '';
 }
 
-/** The whole MODS.md page from the list file. Only depends on the file, so it is the same every run. */
-export function renderModsPage(doc) {
-  const rows = [
-    ...(doc.mods ?? []).map(e => ({ e, rank: statusRank(e.tag), status: statusText(e.tag) })),
-    ...(doc.community ?? []).map(e => ({ e, rank: STATUS.length + 1, status: NOT_CHECKED })),
-  ].sort((a, b) => a.rank - b.rank || (a.e.name || a.e.id).localeCompare(b.e.name || b.e.id, 'en', { sensitivity: 'base' }));
+const versionsOf = (doc, first) => [first, doc.game && `Bannerlord ${doc.game}`, doc.coop && `Coop ${doc.coop}`].filter(Boolean).join(', ');
 
-  const versions = [doc.taom && `TAOM ${doc.taom}`, doc.game && `Bannerlord ${doc.game}`, doc.coop && `Coop ${doc.coop}`].filter(Boolean).join(', ');
+/**
+ * What differs between the two lists: the file kind, where it sits, which reports count, the tags,
+ * the text on top of MODS.md and the table columns. keepOrder lists the hand entries of one status
+ * in the file's order (the AD1259 load order) instead of by name.
+ */
+export const LISTS = {
+  taom: {
+    kind: 'CoodszTaomCompat',
+    file: 'compat/taom-mod-compat.json',
+    // Every report in the TAOM repository is a TAOM one, so only AD1259 reports are left out.
+    leaveOut: [AD1259_LABEL],
+    statuses: STATUS,
+    keepOrder: false,
+    intro: doc => {
+      const versions = versionsOf(doc, doc.taom && `TAOM ${doc.taom}`);
+      return [
+        '# TAOM mod list',
+        '',
+        `Which mods work with TAOM in Coop${versions ? ` (${versions})` : ''}. This page is made from`,
+        '[compat/taom-mod-compat.json](compat/taom-mod-compat.json), the list the Coodsz TAOM tools show,',
+        'and is written again on its own whenever a player report is counted.',
+        '',
+        '## What the statuses mean',
+        '',
+        'The status is set by hand by Coodsz. Player reports never change it; they show in the Players column.',
+        '',
+        '- **Works**: tested in Coop by Coodsz, a TAOM server with a player joining.',
+        '- **Everyone needs it**: works, but the host and every player need the same version.',
+        '- **Loads**: passed the automatic server load test of the TAOM server tool. Joining was not tested.',
+        '- **Reported working**: reported working in TAOM singleplayer, not tested in Coop yet.',
+        '- **Risky**: can work, but it changes campaign logic or battles, or is not tested with TAOM yet. The note says why.',
+        '- **Broken**: known to break TAOM or Coop. Leave it off.',
+        `- **${NOT_CHECKED}**: players reported it, Coodsz has not checked it.`,
+        '',
+        '**Players** counts the players who reported it works or is broken. **Checked by Coodsz** is the day',
+        'Coodsz tested it himself.',
+        '',
+        '## How to report a mod',
+        '',
+        'Click **Report a mod** at the top of the Coodsz TAOM Client Launcher (or **Report** on the bar after a',
+        'game) and pick Works or Broken for each mod. No GitHub account is needed. A report counts here about a',
+        'day later.',
+        `With a GitHub account you can also use the [report form](${REPORT_FORM_URL}).`,
+      ];
+    },
+    header: '| Mod | Status | Players | Checked by Coodsz | Note |',
+    row: (e, status) => `| ${modCell(e)} | ${status} | ${playersCell(e)} | ${checkedCell(e)} | ${mdCell(e.note)} |`,
+  },
+  ad1259: {
+    kind: 'CoodszAd1259Compat',
+    file: 'compat/ad1259-mod-compat.json',
+    // Every report in the AD1259 repository is an AD1259 one, so only TAOM reports are left out.
+    leaveOut: [TAOM_LABEL],
+    statuses: AD1259_STATUS,
+    keepOrder: true,
+    intro: doc => {
+      const versions = versionsOf(doc, doc.ad1259 && `AD1259 ${doc.ad1259}`);
+      return [
+        '# AD1259 mod list',
+        '',
+        `The mods of the AD1259 Coop pack${versions ? ` (${versions})` : ''} and what players report about them.`,
+        'This page is made from [compat/ad1259-mod-compat.json](compat/ad1259-mod-compat.json) and is written',
+        'again on its own whenever a player report is counted.',
+        '',
+        'The server and every player need exactly the pack mods, in these versions and in this order. The Coodsz',
+        'AD1259 Client Launcher checks them and Get it opens each mod\'s page.',
+        '',
+        '## What the statuses mean',
+        '',
+        'The status is set by hand by Coodsz. Player reports never change it; they show in the Players column.',
+        '',
+        `- **In the pack**: part of the AD1259 pack, tested together on a Coop dedicated server with players joining${dayOf(doc.tested) ? ` (${doc.tested})` : ''}. Every PC needs it.`,
+        '- **Works**: an extra mod Coodsz tested with the pack in Coop.',
+        '- **Risky**: an extra mod that can work with the pack, but the note says what to watch for.',
+        '- **Broken**: known to break the pack or Coop. Leave it off.',
+        `- **${NOT_CHECKED}**: players reported it, Coodsz has not checked it.`,
+        '',
+        '**Players** counts the players who reported it works, is broken or is client only. A Broken report on',
+        'a pack mod mostly says which mod a crash named. **Last report** is the day of the newest counted report.',
+        '',
+        '## How to report a mod',
+        '',
+        'Click **Report a mod** at the top of the Coodsz AD1259 Client Launcher (or **Report** on the bar after a',
+        'game) and pick Works or Broken for each mod. No GitHub account is needed. A report counts here about a',
+        'day later.',
+        `With a GitHub account you can also use the [report form](${AD1259_REPORT_FORM_URL}).`,
+      ];
+    },
+    header: '| Mod | Status | Version | Players | Last report | Note |',
+    row: (e, status) => `| ${modCell(e)} | ${status} | ${mdCell(e.version)} | ${playersCell(e)} | ${dayOf(e.lastReport)} | ${mdCell(e.note)} |`,
+  },
+};
+
+/** The list a file is, by its kind; the TAOM list when the kind is not known. */
+export function listOf(doc) {
+  return Object.values(LISTS).find(l => l.kind === doc?.kind) ?? LISTS.taom;
+}
+
+/** The whole MODS.md page from the list file. Only depends on the file, so it is the same every run. */
+export function renderModsPage(doc, list = listOf(doc)) {
+  const { statuses } = list;
+  const name = e => e.name || e.id;
+  const rows = [
+    ...(doc.mods ?? []).map((e, i) => ({ e, i, hand: true, rank: statusRank(e.tag, statuses), status: statusText(e.tag, statuses) })),
+    ...(doc.community ?? []).map((e, i) => ({ e, i, hand: false, rank: statuses.length + 1, status: NOT_CHECKED })),
+  ].sort((a, b) => a.rank - b.rank
+    || (list.keepOrder && a.hand && b.hand ? a.i - b.i : name(a.e).localeCompare(name(b.e), 'en', { sensitivity: 'base' })));
+
   const out = [
-    '# TAOM mod list',
+    ...list.intro(doc),
     '',
-    `Which mods work with TAOM in Coop${versions ? ` (${versions})` : ''}. This page is made from`,
-    '[compat/taom-mod-compat.json](compat/taom-mod-compat.json), the list the Coodsz TAOM tools show,',
-    'and is written again on its own whenever a player report is counted.',
-    '',
-    '## What the statuses mean',
-    '',
-    'The status is set by hand by Coodsz. Player reports never change it; they show in the Players column.',
-    '',
-    '- **Works**: tested in Coop by Coodsz, a TAOM server with a player joining.',
-    '- **Everyone needs it**: works, but the host and every player need the same version.',
-    '- **Loads**: passed the automatic server load test of the TAOM server tool. Joining was not tested.',
-    '- **Reported working**: reported working in TAOM singleplayer, not tested in Coop yet.',
-    '- **Risky**: can work, but it changes campaign logic or battles, or is not tested with TAOM yet. The note says why.',
-    '- **Broken**: known to break TAOM or Coop. Leave it off.',
-    `- **${NOT_CHECKED}**: players reported it, Coodsz has not checked it.`,
-    '',
-    '**Players** counts the players who reported it works or is broken. **Checked by Coodsz** is the day',
-    'Coodsz tested it himself.',
-    '',
-    '## How to report a mod',
-    '',
-    'Click **Report a mod** at the top of the Coodsz TAOM Client Launcher (or **Report** on the bar after a',
-    'game) and pick Works or Broken for each mod. No GitHub account is needed. A report counts here about a',
-    'day later.',
-    `With a GitHub account you can also use the [report form](${REPORT_FORM_URL}).`,
-    '',
-    '| Mod | Status | Players | Checked by Coodsz | Note |',
-    '| --- | --- | --- | --- | --- |',
-    ...rows.map(({ e, status }) => `| ${modCell(e)} | ${status} | ${playersCell(e)} | ${checkedCell(e)} | ${cell(e.note)} |`),
+    list.header,
+    list.header.replace(/[^|]+/g, ' --- '),
+    ...rows.map(({ e, status }) => list.row(e, status)),
     '',
     `${rows.length} mods${doc.updated ? `. List updated ${doc.updated}` : ''}.`,
     '',
@@ -218,22 +297,18 @@ function arg(name) {
   return i > 0 ? process.argv[i + 1] : undefined;
 }
 
-function writeIfChanged(file, text, dryRun) {
-  const before = fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : null;
-  if (before === text) return false;
-  if (!dryRun) fs.writeFileSync(file, text);
-  return true;
-}
-
 async function main() {
-  const file = arg('--file') ?? 'compat/taom-mod-compat.json';
+  const listName = arg('--list') ?? 'taom';
+  const list = LISTS[listName];
+  if (!list) throw new Error(`--list must be ${Object.keys(LISTS).join(' or ')}`);
+  const file = arg('--file') ?? list.file;
   const page = arg('--page') ?? 'MODS.md';
   const fixture = arg('--issues');
   const dryRun = process.argv.includes('--dry-run');
 
   const original = fs.readFileSync(file, 'utf8');
   const doc = JSON.parse(original.replace(/^\uFEFF/, ''));
-  if (doc.kind !== 'CoodszTaomCompat' || !Array.isArray(doc.mods)) throw new Error(`${file} is not a TAOM mod list`);
+  if (doc.kind !== list.kind || !Array.isArray(doc.mods)) throw new Error(`${file} is not a ${listName} mod list`);
   const nl = original.includes('\r\n') ? '\r\n' : '\n';
 
   let listChanged = false;
@@ -246,8 +321,7 @@ async function main() {
       if (!token || !repo) throw new Error('GITHUB_TOKEN and GITHUB_REPOSITORY are needed (or --issues <fixture.json>)');
       issues = await fetchIssues(repo, token);
     }
-    // Every report in the TAOM repository is a TAOM one, so only AD1259 reports are left out.
-    const { reports, skipped } = collectReports(issues, { leaveOut: [AD1259_LABEL] });
+    const { reports, skipped } = collectReports(issues, { leaveOut: list.leaveOut });
     const { added } = applyTaomTally(doc, reports);
     const text = serializeTaom(doc, nl);
     JSON.parse(text); // make sure the result is valid before writing it
@@ -256,7 +330,7 @@ async function main() {
     for (const id of added) console.log(`  not on the list: ${id}`);
     listChanged = writeIfChanged(file, text, dryRun);
   }
-  const pageChanged = writeIfChanged(page, renderModsPage(doc), dryRun);
+  const pageChanged = writeIfChanged(page, renderModsPage(doc, list), dryRun);
   const changed = listChanged || pageChanged;
   console.log(changed ? `Changed${listChanged ? ` ${file}` : ''}${pageChanged ? ` ${page}` : ''}${dryRun ? ' (dry run)' : ''}.` : 'No change.');
   if (process.env.GITHUB_OUTPUT) fs.appendFileSync(process.env.GITHUB_OUTPUT, `changed=${changed && !dryRun}\n`);

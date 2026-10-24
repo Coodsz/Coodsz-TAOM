@@ -12,14 +12,23 @@
 // "testedWith" (mods often in the lists of players who said it works), "conflicts" (mods in the
 // broken lists that no works list had) and "needs" (the mods players said it works only with).
 // TAOM reports (label "taom") are not counted here; tally-taom-compat.mjs counts them in the
-// Coodsz-TAOM repository, where the worker files them. AD1259 reports
-// (label "ad1259") are left out too; the AD1259 pack is fixed and read by hand.
+// Coodsz-TAOM repository, where the worker files them. AD1259 reports (label "ad1259") are left
+// out too; the same script counts them in Coodsz-AD1259 (tally-taom-compat.mjs --list ad1259).
+// Both kinds only sit here from before the worker filed them in their own repository.
+//
+// Next to the counts each entry gets "clientOnly" (players who said it only needs to be on the
+// players' PCs; it never changes the status) and "lastReport" (the day of the newest counted
+// report), only when there are any. The tools skip both (System.Text.Json ignores unknown fields).
+//
+// It also writes MODS.md, the readable page of the whole list (renderModsPage), in the root of
+// Coodsz-Coop-and-Friends, where the tools' Full mod list link opens it.
 //
 // Every run counts all open and closed reports again; running twice on the same input
 // gives the same file (idempotent).
 //
 // Usage:
-//   node tally-mod-compat.mjs [--file compat-list/mods.json] [--records compat-list/compat-records.json] [--issues fixture.json] [--dry-run]
+//   node tally-mod-compat.mjs [--file compat-list/mods.json] [--page MODS.md] [--records compat-list/compat-records.json] [--issues fixture.json] [--dry-run]
+//   node tally-mod-compat.mjs --page-only [--file ...] [--page ...]   (only writes MODS.md from the file as it is)
 //
 // --records also writes the approved results as ModderLords compat records (compat-records.mjs).
 //
@@ -35,7 +44,7 @@ export const IGNORED_LABELS = ['invalid', 'spam', 'pending'];
 // Set by the report worker only (no issue form adds it), so its Reporter line can be trusted.
 export const REPORT_LABEL = 'mod-report';
 export const TAOM_LABEL = 'taom';
-// AD1259 client reports: the pack is fixed, so they are read by hand like the TAOM ones.
+// AD1259 client reports: counted in Coodsz-AD1259 against the fixed pack, never here.
 export const AD1259_LABEL = 'ad1259';
 // A mod counts as "broken together with" this one once it was in this many broken reports and in no works report.
 export const CONFLICT_MIN = 2;
@@ -46,7 +55,7 @@ export const COMMON_MODS = ['bannerlord.harmony', 'bannerlord.butterlib', 'banne
 // The status changes on its own once works - broken reaches this difference.
 export const THRESHOLD = 3;
 
-const KEY_ORDER = ['id', 'name', 'status', 'coop', 'note', 'workshop', 'nexus', 'category', 'works', 'broken', 'testedWith', 'conflicts', 'needs', 'idGuess'];
+const KEY_ORDER = ['id', 'name', 'status', 'coop', 'note', 'workshop', 'nexus', 'category', 'works', 'broken', 'clientOnly', 'lastReport', 'testedWith', 'conflicts', 'needs', 'idGuess'];
 const ID_PATTERN = /^[\p{L}\p{N}_.\-' ()+&!:]{1,100}$/u;
 
 // ---- JSONC ---------------------------------------------------------------
@@ -139,8 +148,8 @@ export function normalizeResult(value) {
 /**
  * The reports that count: only the latest one per person and mod. Reports labelled
  * invalid or spam, pull requests, bots and reports that cannot be read are skipped. leaveOut are
- * the tool labels this list does not count: TAOM and AD1259 here, only AD1259 in the TAOM tally
- * (tally-taom-compat.mjs), where every report is a TAOM one.
+ * the tool labels this list does not count: TAOM and AD1259 here, only the other one in the TAOM
+ * and AD1259 tallies (tally-taom-compat.mjs), where every report is of that tool.
  */
 export function collectReports(issues, { leaveOut = [TAOM_LABEL, AD1259_LABEL] } = {}) {
   const latest = new Map();
@@ -209,13 +218,15 @@ export function applyTally(mods, reports) {
       byId.set(entry.id.toLowerCase(), entry);
       added.push(entry.id);
     }
-    const c = counts.get(entry) ?? { works: 0, broken: 0, clientonly: 0, worksLists: [], brokenLists: [], needs: [] };
+    const c = counts.get(entry) ?? { works: 0, broken: 0, clientonly: 0, lastReport: '', worksLists: [], brokenLists: [], needs: [] };
     if (r.result === 'workswith') {
       c.works++;
       if (r.with) c.needs.push(r.with);
     } else {
       c[r.result]++;
     }
+    const day = String(r.created ?? '').slice(0, 10);
+    if (/^\d{4}-\d{2}-\d{2}$/.test(day) && day > c.lastReport) c.lastReport = day;
     const others = otherMods(r.mods, entry.id);
     if (others.length && (r.result === 'works' || r.result === 'workswith')) c.worksLists.push(others);
     if (others.length && r.result === 'broken') c.brokenLists.push(others);
@@ -225,9 +236,13 @@ export function applyTally(mods, reports) {
 
   const statusChanges = [];
   for (const m of mods) {
-    const c = counts.get(m) ?? { works: 0, broken: 0, worksLists: [], brokenLists: [], needs: [] };
+    const c = counts.get(m) ?? { works: 0, broken: 0, clientonly: 0, lastReport: '', worksLists: [], brokenLists: [], needs: [] };
     m.works = c.works;
     m.broken = c.broken;
+    if (c.clientonly) m.clientOnly = c.clientonly;
+    else delete m.clientOnly;
+    if (c.lastReport) m.lastReport = c.lastReport;
+    else delete m.lastReport;
     m.status ??= 'Unknown';
     setList(m, 'testedWith', topIds(c.worksLists.flat()));
     const inWorks = new Set(c.worksLists.flat().map(id => id.toLowerCase()));
@@ -280,6 +295,116 @@ function setList(entry, key, ids) {
   else delete entry[key];
 }
 
+// ---- MODS.md ------------------------------------------------------------
+// The readable page of the list. mdCell, mdModLink, countsText and writeIfChanged are shared with
+// the TAOM and AD1259 pages (tally-taom-compat.mjs).
+
+export const REPORT_FORM_URL = 'https://github.com/Coodsz/Coodsz-Coop-and-Friends/issues/new?template=mod-compat.yml';
+export const NOT_CHECKED = 'Not checked yet';
+// The prefix of a hand kept Works note for a mod that runs with the fixes the note gives.
+const WITH_ISSUES = 'works with issues.';
+
+// The plain words for each status, in the order MODS.md lists them.
+export const COOP_STATUS = ['Works', 'Works with issues', 'Client only', 'Reported working', 'Reported broken', 'Broken', NOT_CHECKED];
+
+/**
+ * Text for a table cell: no line breaks, no pipes, no HTML, and no links GitHub would make on its
+ * own. A reported id or name like "www.some-site.example" would otherwise turn into a link (GFM
+ * autolinks www. and scheme://), so the dot after www and the slashes after a scheme are escaped;
+ * the page still shows the text as it is.
+ */
+export function mdCell(text) {
+  return String(text ?? '').replace(/\r?\n/g, ' ').replace(/\|/g, '\\|').replace(/</g, '&lt;')
+    .replace(/\b(www)\./gi, '$1\\.').replace(/:\/\//g, ':\\/\\/').trim();
+}
+
+/** The mod's name, linked to its Steam Workshop page, else its Nexus Mods page. */
+export function mdModLink(name, workshopId, nexusId) {
+  const text = mdCell(name).replace(/([[\]])/g, '\\$1');
+  const workshop = String(workshopId ?? '').trim(), nexus = String(nexusId ?? '').trim();
+  if (/^\d{1,20}$/.test(workshop)) return `[${text}](https://steamcommunity.com/sharedfiles/filedetails/?id=${workshop})`;
+  if (/^\d{1,10}$/.test(nexus)) return `[${text}](https://www.nexusmods.com/mountandblade2bannerlord/mods/${nexus})`;
+  return text;
+}
+
+/** "3 works, 1 broken, 2 client only" (client only only when there are any). */
+export function countsText(works, broken, clientOnly) {
+  const parts = [`${works ?? 0} works`, `${broken ?? 0} broken`];
+  if (clientOnly) parts.push(`${clientOnly} client only`);
+  return parts.join(', ');
+}
+
+/** The status words of an entry. A hand kept one ("coop") was checked by Coodsz; the others come from the player counts. */
+export function coopStatusText(e) {
+  const status = String(e.status ?? '').trim().toLowerCase();
+  if (status === 'clientonly') return 'Client only';
+  if (status === 'works') {
+    if (!isManual(e)) return 'Reported working';
+    return String(e.note ?? '').trim().toLowerCase().startsWith(WITH_ISSUES) ? 'Works with issues' : 'Works';
+  }
+  if (status === 'broken') return isManual(e) ? 'Broken' : 'Reported broken';
+  return NOT_CHECKED;
+}
+
+/** The Players cell: empty when nobody reported it. */
+export function coopPlayersCell(e) {
+  return (e.works ?? 0) + (e.broken ?? 0) + (e.clientOnly ?? 0) > 0 ? countsText(e.works, e.broken, e.clientOnly) : '';
+}
+
+/** The whole MODS.md page from the list. Only depends on the list, so it is the same every run. */
+export function renderModsPage(doc) {
+  const rows = (doc.mods ?? [])
+    .map(e => ({ e, status: coopStatusText(e) }))
+    .sort((a, b) => COOP_STATUS.indexOf(a.status) - COOP_STATUS.indexOf(b.status)
+      || (a.e.name || a.e.id).localeCompare(b.e.name || b.e.id, 'en', { sensitivity: 'base' }) || a.e.id.localeCompare(b.e.id));
+  const day = e => (/^\d{4}-\d{2}-\d{2}$/.test(e.lastReport ?? '') ? e.lastReport : '');
+  const out = [
+    '# Coop and Friends mod list',
+    '',
+    'Which mods work with Bannerlord Coop. This page is made from',
+    '[compat-list/mods.json](compat-list/mods.json), the list Coodsz Coop and Friends and Coodsz Host show,',
+    'and is written again on its own whenever a player report is counted.',
+    '',
+    '## What the statuses mean',
+    '',
+    '- **Works**: checked in Coop by Coodsz. The Coop version it was checked with is in the Checked with Coop column.',
+    '- **Works with issues**: checked by Coodsz, it runs with the fixes the note gives.',
+    '- **Client only**: only needs to be on the players\' PCs (looks, interface). The server keeps it with its code off.',
+    `- **Reported working**: not checked by Coodsz, but at least ${THRESHOLD} more players said it works than said it is broken.`,
+    `- **Reported broken**: not checked by Coodsz, but at least ${THRESHOLD} more players said it is broken than said it works.`,
+    '- **Broken**: known to break Coop or to stop players from joining. Leave it off.',
+    `- **${NOT_CHECKED}**: nobody checked it yet, or the player reports do not agree yet.`,
+    '',
+    'A status Coodsz set by hand never changes on its own; player reports show in the Players column.',
+    '**Players** counts the players who reported it works, is broken or is client only. **Last report** is',
+    'the day of the newest counted report.',
+    '',
+    '## How to report a mod',
+    '',
+    'Click **Report a mod** at the top of Coodsz Coop and Friends (or **Report** on the bar after a game)',
+    'and pick Works or Broken for each mod. No GitHub account is needed. A report counts here about a',
+    'day later.',
+    `With a GitHub account you can also use the [report form](${REPORT_FORM_URL}).`,
+    '',
+    '| Mod | Status | Players | Last report | Checked with Coop | Note |',
+    '| --- | --- | --- | --- | --- | --- |',
+    ...rows.map(({ e, status }) =>
+      `| ${mdModLink(e.name || e.id, e.workshop, e.nexus)} | ${status} | ${coopPlayersCell(e)} | ${day(e)} | ${isManual(e) ? mdCell(e.coop) : ''} | ${mdCell(e.note)} |`),
+    '',
+    `${rows.length} mods.`,
+    '',
+  ];
+  return out.join('\n');
+}
+
+/** Writes the file only when its text changed; true when it did (or would, in a dry run). */
+export function writeIfChanged(file, text, dryRun) {
+  const before = fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : null;
+  if (before === text) return false;
+  if (!dryRun) fs.writeFileSync(file, text);
+  return true;
+}
+
 // ---- GitHub -------------------------------------------------------------
 
 export async function fetchIssues(repo, token) {
@@ -305,10 +430,25 @@ function arg(name) {
 
 async function main() {
   const file = arg('--file') ?? 'compat-list/mods.json';
+  const page = arg('--page') ?? 'MODS.md';
   const fixture = arg('--issues');
   const dryRun = process.argv.includes('--dry-run');
   const recordsFile = arg('--records');
 
+  const original = fs.readFileSync(file, 'utf8');
+  const doc = parseJsonc(original);
+  if (!Array.isArray(doc.mods)) throw new Error(`${file} has no "mods" array`);
+  let changed = false;
+  if (!process.argv.includes('--page-only')) changed = await tally(file, original, doc, { fixture, dryRun, recordsFile });
+
+  const pageChanged = writeIfChanged(page, renderModsPage(doc), dryRun);
+  console.log(pageChanged ? `Changed ${page}${dryRun ? ' (dry run)' : ''}.` : `${page} is up to date.`);
+  changed = changed || (pageChanged && !dryRun);
+  if (process.env.GITHUB_OUTPUT) fs.appendFileSync(process.env.GITHUB_OUTPUT, `changed=${changed}\n`);
+}
+
+/** Counts the reports into doc and writes the list (and the records); true when a file changed. */
+async function tally(file, original, doc, { fixture, dryRun, recordsFile }) {
   let issues;
   if (fixture) {
     issues = JSON.parse(fs.readFileSync(fixture, 'utf8'));
@@ -318,8 +458,6 @@ async function main() {
     issues = await fetchIssues(repo, token);
   }
 
-  const original = fs.readFileSync(file, 'utf8');
-  const doc = parseJsonc(original);
   const { reports, skipped } = collectReports(issues);
   const { added, renamed, statusChanges, reportsByEntry } = applyTally(doc.mods, reports);
   const text = serialize(original, doc.mods);
@@ -340,7 +478,7 @@ async function main() {
     console.log(`compat records: ${records.Records.length}${recordsChanged ? ', written' : ''}`);
     changed = changed || recordsChanged;
   }
-  if (process.env.GITHUB_OUTPUT) fs.appendFileSync(process.env.GITHUB_OUTPUT, `changed=${changed}\n`);
+  return changed;
 }
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === fs.realpathSync(process.argv[1])) {

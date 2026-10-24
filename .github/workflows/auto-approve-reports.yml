@@ -9,8 +9,9 @@
 #
 # Like the tally, this file is copied to Coodsz/Coodsz-Coop-and-Friends at release and only runs
 # there; scheduled workflows only run on the default branch. The same file, unchanged, goes to
-# Coodsz/Coodsz-TAOM too, where mod-compat-tally.yml is the TAOM tally
-# (taom-compat/.github/workflows/mod-compat-tally.yml here, docs/compat-list-publish.md).
+# Coodsz/Coodsz-TAOM and Coodsz/Coodsz-AD1259 too, where mod-compat-tally.yml is the TAOM or the
+# AD1259 tally (taom-compat/ and ad1259-compat/.github/workflows/mod-compat-tally.yml here,
+# docs/compat-list-publish.md).
 
 name: Auto approve mod reports
 
