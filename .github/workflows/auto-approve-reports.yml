@@ -1,0 +1,55 @@
+# Approves the one click mod reports on its own (.github/scripts/auto-approve-reports.mjs).
+#
+# Every hour it removes "pending" from the open "mod-report" issues nobody changed for WAIT_HOURS
+# hours that have none of "suspicious", "spam" or "invalid". The report worker labels odd reports
+# "suspicious"; those stay pending until Coodsz looks at them (docs/compat-list-publish.md).
+#
+# A label removed with the built in GITHUB_TOKEN does not start other workflows (GitHub's rule
+# against loops), so when anything was approved this workflow runs the tally itself.
+#
+# Like the tally, this file is copied to Coodsz/Coodsz-Coop-and-Friends at release and only runs
+# there; scheduled workflows only run on the default branch. The same file, unchanged, goes to
+# Coodsz/Coodsz-TAOM too, where mod-compat-tally.yml is the TAOM tally
+# (taom-compat/.github/workflows/mod-compat-tally.yml here, docs/compat-list-publish.md).
+
+name: Auto approve mod reports
+
+on:
+  schedule:
+    - cron: '23 * * * *'
+  workflow_dispatch:
+
+# The one setting: hours a report waits after its last change before it counts.
+env:
+  WAIT_HOURS: 24
+
+permissions: {}
+
+jobs:
+  approve:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    outputs:
+      approved: ${{ steps.approve.outputs.approved }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Remove pending from the reports that waited long enough
+        id: approve
+        run: node .github/scripts/auto-approve-reports.mjs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  tally:
+    needs: approve
+    if: needs.approve.outputs.approved != '' && needs.approve.outputs.approved != '0'
+    permissions:
+      contents: write
+      issues: read
+    uses: ./.github/workflows/mod-compat-tally.yml
