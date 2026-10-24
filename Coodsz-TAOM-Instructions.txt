@@ -6,7 +6,7 @@ PART 1 — players
 
 # Coodsz TAOM
 
-Tools version: **v1.1.21** (Client Launcher and Dedicated Server Tool), for **TAOM-Coop 0.3.25**.
+Tools version: **v1.1.45** (Client Launcher and Dedicated Server Tool), for **TAOM-Coop 0.3.25**.
 
 You need Bannerlord **1.4.8** on Steam.
 
@@ -21,7 +21,7 @@ https://dotnet.microsoft.com/download/dotnet/8.0
 https://github.com/Coodsz/Coodsz-TAOM/releases/latest
 
 1. Download **Coodsz TAOM Client Launcher**. Unzip it before you open it.
-2. Download `TAOM-Coop-v0.3.25-CompatOnly-CLIENT-PLAYTEST-1675bea7-a2ac41c2-r2.zip`. Leave it zipped. Every player needs it. **Install TAOM** finds it anywhere on this PC, including the Desktop.
+2. Download `TAOM-Coop-v0.3.25-CompatOnly-CLIENT-PLAYTEST-1675bea7-a2ac41c2-r2.zip`. Leave it zipped. Every player needs it. **Install or repair TAOM** finds it anywhere on this PC, including the Desktop.
 3. The host also downloads `TAOM-Coop-v0.3.25-CompatOnly-HOST-OPERATOR-1675bea7-a2ac41c2-r2.zip`. Leave that zipped. **Prepare server** finds it anywhere on this PC, including the Desktop.
 4. Subscribe to **Bannerlord Coop** on the Steam Workshop (item 3770450698) and stay subscribed. Steam gives you Coop **0.1.6**, which is the one TAOM-Coop 0.3.25 uses.
 5. Download TAOM **2.0.29.5** (`TAOM_Public_2_0_29_5.zip`, about 18 GB) and leave that zip anywhere on this PC:
@@ -34,18 +34,18 @@ If SmartScreen says "Unknown publisher", choose **More info**, then **Run anyway
 # Do this
 1. Close Bannerlord.
 2. Open `Coodsz TAOM Client Launcher.exe` in that folder.
-3. Click **Unblock DLLs** first. It is the first Setup button. Until you have used it once, it stays gold and pulses, and the first **Connect** waits for that click. Windows blocks downloaded DLLs, and the game cannot load them until that block is cleared. It clears the Windows download mark under Modules. It does not change the mod files. If Windows blocks a DLL later, that button turns red. Click it again, then **Connect**.
-4. Click **Check mods**, then **Install TAOM**. It installs all four TAOM 2.0.29.5 modules from the zip and the CompatOnly zip.
-5. Click **Use Workshop Coop 0.1.6**. It checks that the Workshop Coop is 0.1.6 and moves any other Coop copy (like the old 0.1.5 playtest copy) out of Modules. Moved folders are kept, not deleted. If Coop is missing, it subscribes in Steam first.
+3. Windows blocks downloaded DLLs, and the game cannot load them until that block is cleared. The launcher clears the Windows download mark under Modules by itself before every launch and after **Install mods**. It does not change the mod files. The **Unblock DLLs** button is still in **More tools**.
+4. Click **Check mods**, then **Install or repair TAOM**. It installs all four TAOM 2.0.29.5 modules from the zip and the CompatOnly zip.
+5. Open **More tools** and click **Use Workshop Coop 0.1.6**. It checks that the Workshop Coop is 0.1.6 and moves any other Coop copy (like the old 0.1.5 playtest copy) out of Modules. Moved folders are kept, not deleted. If Coop is missing, it subscribes in Steam first.
 6. **Direct** (recommended): the host's IP and UDP port `4200`. **Steam lobby**: only if the host turned on Steam. Use the host's Steam profile name (the name friends see in Steam, not the login name), with Steam running on both PCs. Put a password only if the host has set one.
 7. Click **Connect**.
 
 # If something goes wrong
-- **Open client logs** is highlighted. That click opens Coop_client.log and a dated client-action.log copy for Discord. Passwords, addresses, and Steam IDs are removed from the action log.
-- If the game closes, click **Save all logs to one zip** and send that zip. It is the full pack: Coop_client.log, client-action.log, the activity log, crash reports, engine logs, TAOM.CoopCompat logs, and the crash dump when present. Saves are left out. Addresses, Steam IDs, and passwords are removed from the text files.
-- **Report a problem** asks what went wrong and what you tried, then saves one zip with that and a check of your TAOM modules. Send that zip.
+- **Open client logs** in **More tools** opens Coop_client.log and a dated client-action.log copy for Discord. Passwords, addresses, and Steam IDs are removed from the action log.
+- If the game closes, click **Save logs for help** and send that zip. It is the full pack: Coop_client.log, client-action.log, the activity log, crash reports, engine logs with the watchdog log of each session, TAOM.CoopCompat logs, TAOM stall reports (taom_crash zips from the last 3 days), the logs of a TAOM server on the same PC, and the crash dump when present. Saves are left out. Addresses, Steam IDs, and passwords (also the join password on the game command line) are removed from the text files.
+- A yellow line under **Connect** warns when the PC is low on memory, or when a dedicated server runs on the same PC with less than 24 GB. TAOM can freeze when Windows runs out of memory. Close heavy apps, run the server on another PC if you can, and let Windows manage the page file. Connect still works.
 - If a join fails, or the game closes before it joins, the log says what to change. Follow that line.
-- If the game is choppy after you connect, click the green **Fix low FPS** button. Close Bannerlord if it is open, then click **Connect** again. The rose **Undo FPS fix** button puts the patch shield back if that click was a mistake.
+- If the game is choppy after you connect, turn the **Low FPS fix** switch on. Close Bannerlord if it is open, then click **Connect** again. Turning the switch off puts the patch shield back if that was a mistake.
 - **Clear shader cache** deletes only the shader folder in ProgramData. Close Bannerlord first. It does not touch mods or saves. There is no undo. The game builds the shaders again the next time it starts.
 
 # Do not
@@ -70,7 +70,7 @@ Coming from 0.3.17? The tool moves to a new server folder (`Server-v0325-Coop-v0
 2. Start a new TAOM 2.0.29.5 campaign in single player and save it. Pick that save in the tool. A vanilla new game and `default_new_game` are refused. **Start server** only loads a save already in the server Game Saves folder. If the line says Single player copy, click **Name server copy** first. Leave the name box blank to use that campaign's name.
 3. Click **Prepare server** once. If that folder is already prepared, leave it.
 4. Click **Start server**. The first time, it shows the Coop server terms. Read them and click **I accept**, or the server will not start. It only asks again when Coop changes the terms.
-5. Wait until the log says **SERVING**. Closing the host and opening it again still shows **SERVING** when that server is still running. **Open server logs** is highlighted. That click opens the logs folder and selects the newest coop-server log plus a dated host-action-*.log copy for Discord (not the plain host-action.log).
+5. Wait until the log says **SERVING**. The first start of a new campaign builds the map cache first and can take up to an hour. The status at the top says "Building the map cache: 36 of 221" while it works. Do not stop the server then, or it starts over. Closing the host and opening it again still shows **SERVING** when that server is still running. **Open server logs** is highlighted. That click opens the logs folder and selects the newest coop-server log plus a dated host-action-*.log copy for Discord (not the plain host-action.log).
 6. If the server tool says it cannot load a DLL and the message includes the folder path, click **Unblock DLLs** in the server tool. That button turns red when the server log says Windows blocked a DLL. It clears the Windows download mark in the server folder. A startup line that only says `Cannot load: SandBox.dll` is not a blocked file, and it does not replace **SERVING**.
 7. Give players your port-forwarded IP address and UDP `4200`. That is the recommended way.
 8. Steam lobby is optional. Tick **Advertise through Steam** on the Server page before you click **Start server**, keep Steam running, and give friends your Steam profile name. If a Steam join fails, use direct connect.
@@ -126,7 +126,7 @@ This update also changes the mods, so do these once after the tools are updated:
 1. Download the new 0.3.25 CLIENT zip (and the HOST-OPERATOR zip if you host). Leave them zipped.
 2. Download TAOM 2.0.29.5 from the ModDB link in PART 1. Leave it zipped.
 3. Stay subscribed to Bannerlord Coop on the Workshop so Steam gives you 0.1.6.
-4. In the client: **Unblock DLLs**, **Check mods**, **Install TAOM**, then **Use Workshop Coop 0.1.6**.
+4. In the client: **Check mods**, **Install or repair TAOM**, then **More tools** and **Use Workshop Coop 0.1.6**.
 5. Host: make a new 2.0.29.5 campaign, pick it, **Prepare server**, then **Start server**.
 
 # Do not
@@ -135,6 +135,9 @@ This update also changes the mods, so do these once after the tools are updated:
 - Do not delete the TAOM-Coop-Host folder or anything in Documents.
 - Do not rename the old 0.3.17 compat zips to look new. The tools only pick up the 0.3.25 zips, so the old ones can stay where they are.
 
-The new programs do the new checks themselves. The client raises Low terrain to Medium when you click **Connect**. The server tool copies missing .NET 6 files into the server folder when you click **Start server**. **Start server** only loads a save already in the server Game Saves folder. **Name server copy** makes that copy, and a blank name uses the campaign name. **Use Workshop Coop 0.1.6** checks the Workshop Coop, subscribes in Steam first if it is missing, and moves any other Coop folder out of Modules without deleting it. The server tool asks you to accept the Coop server terms on the first **Start server**. **Open client logs** selects Coop_client.log and client-action.log. **Save all logs to one zip** packs Coop_client.log, client-action.log, the activity log, crash reports, engine logs, TAOM.CoopCompat logs, and the crash dump when present. Saves are left out. **Report a problem** saves one zip with what went wrong. **Fix low FPS** turns off TAOM's patch shield. Close Bannerlord if it is open, then click **Connect** again. **Undo FPS fix** puts the patch shield back. **Save all logs to one zip** on the server tool packs the host logs and the host-console logs and removes the password. Saves are left out, and crash dumps are only added after you say yes. **Unblock DLLs** clears the Windows download mark. On the client it is the first Setup button. Until you have used it once, it pulses and the first **Connect** waits for it. There the folder is Modules. On the server tool that folder is the server folder. That button turns red when Windows blocked a DLL. It does not change the mod files. **Clear shader cache** deletes only the shader folder in ProgramData. Close Bannerlord first. It does not touch mods or saves. If `Coop.Core.dll` was edited for a password, the client puts the released Coop 0.1.6 file back, and the server tool does the same on **Start server**. That edit crashes TAOM.CoopCompat. **Install update** replaces the program only. It does not change the game, the mods, the server, or the save. After the new copy opens, the line and the button are gone until the next release.
+The new programs do the new checks themselves. The client raises Low terrain to Medium when you click **Connect**. The server tool copies missing .NET 6 files into the server folder when you click **Start server**. **Start server** only loads a save already in the server Game Saves folder. **Name server copy** makes that copy, and a blank name uses the campaign name. **Use Workshop Coop 0.1.6** checks the Workshop Coop, subscribes in Steam first if it is missing, and moves any other Coop folder out of Modules without deleting it. The server tool asks you to accept the Coop server terms on the first **Start server**. **Open client logs** selects Coop_client.log and client-action.log. **Save logs for help** packs Coop_client.log, client-action.log, the activity log, crash reports, engine logs, TAOM.CoopCompat logs, and the crash dump when present. Saves are left out. The **Low FPS fix** switch turns off TAOM's patch shield. Close Bannerlord if it is open, then click **Connect** again. Turning it off puts the patch shield back. **Save all logs to one zip** on the server tool packs the host logs and the host-console logs and removes the password. Saves are left out, and crash dumps are only added after you say yes. **Unblock DLLs** clears the Windows download mark. On the client it runs by itself before every launch and after **Install mods**, and the button is in **More tools**. There the folder is Modules. On the server tool that folder is the server folder. That button turns red when Windows blocked a DLL. It does not change the mod files. **Clear shader cache** deletes only the shader folder in ProgramData. Close Bannerlord first. It does not touch mods or saves. If `Coop.Core.dll` was edited for a password, the client puts the released Coop 0.1.6 file back, and the server tool does the same on **Start server**. That edit crashes TAOM.CoopCompat. **Install update** replaces the program only. It does not change the game, the mods, the server, or the save. After the new copy opens, the line and the button are gone until the next release.
 
 I will try my best to keep these updated and working with the latest release. Any bugs, challenges, feature ideas, or if you need help in any way, please let me know in this thread.
+
+# License
+The tools are free to use. Copyright (c) 2026 Coodsz, all rights reserved. Without written permission from Coodsz you may not make money with them, decompile them, reupload them anywhere other than the official GitHub releases, or share modified copies. To ask, contact Coodsz on Discord (Coodsz) or on GitHub (github.com/Coodsz). The full text is in LICENSE.txt in the zip. Each tool shows it once at the first start, and you press **I agree** to use the tools.
