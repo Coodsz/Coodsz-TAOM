@@ -1,0 +1,76 @@
+# The TAOM community list tally, for the Coodsz/Coodsz-TAOM repository (its source is kept in the
+# launcher repository under taom-compat/, see docs/compat-list-publish.md, TAOM community list).
+# In the launcher repository it does not run; only files under .github/workflows run.
+#
+# Counts the approved TAOM mod reports (.github/scripts/tally-taom-compat.mjs) into the count
+# fields of compat/taom-mod-compat.json (works, broken, clientOnly, lastReport) and writes MODS.md.
+# The hand checked fields (tag, class, source, checked, note and the rest) are never changed.
+#
+# The one click reports the TAOM tools send through server/mod-reports-worker arrive with the
+# labels mod-compat, mod-report, pending and taom. They count once "pending" is removed, by Coodsz
+# (that unlabel runs this workflow) or by the hourly auto approval (auto-approve-reports.yml, the
+# same file as in Coodsz-Coop-and-Friends, which calls this workflow by this file name).
+# Reports from the issue form count right away. A report with "invalid" or "spam" drops out.
+#
+# It also runs when compat/taom-mod-compat.json is pushed (a hand edit or the copy at release), so
+# the counts and MODS.md come back right after the hand list is copied over. Its own commit is made
+# with GITHUB_TOKEN, which starts no workflow, so it does not loop.
+#
+# Note: issue events only run the workflow on the default branch.
+
+name: TAOM mod list tally
+
+on:
+  issues:
+    types: [opened, edited, labeled, unlabeled, closed, reopened]
+  push:
+    branches: [main]
+    paths:
+      - compat/taom-mod-compat.json
+      - .github/scripts/tally-taom-compat.mjs
+  workflow_dispatch:
+  # Called by auto-approve-reports.yml after it approved reports.
+  workflow_call:
+
+permissions:
+  contents: write
+  issues: read
+
+# Two tallies never write to the default branch at the same time.
+concurrency:
+  group: mod-compat-tally
+  cancel-in-progress: false
+
+jobs:
+  tally:
+    if: >-
+      github.event_name != 'issues' ||
+      contains(github.event.issue.labels.*.name, 'mod-compat') ||
+      github.event.label.name == 'mod-compat'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch || github.ref_name }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Count the reports and write MODS.md
+        id: tally
+        run: node .github/scripts/tally-taom-compat.mjs --file compat/taom-mod-compat.json --page MODS.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push the change to the default branch
+        if: steps.tally.outputs.changed == 'true'
+        env:
+          BRANCH: ${{ github.event.repository.default_branch || github.ref_name }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add compat/taom-mod-compat.json MODS.md
+          git commit -m "Update the TAOM mod list counts and MODS.md"
+          git pull --rebase origin "$BRANCH"
+          git push origin "HEAD:$BRANCH"
