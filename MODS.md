@@ -124,5 +124,6 @@ With a GitHub account you can also use the [report form](https://github.com/Cood
 | [Diplomacy](https://steamcommunity.com/sharedfiles/filedetails/?id=2881380744) | Broken |  |  | Known broken with TAOM. The game keeps loading forever. The TAOM Diplomacy patch refuses TAOM 2.0.29.5. |
 | [Frontline Mod](https://www.nexusmods.com/mountandblade2bannerlord/mods/9058) | Broken |  |  | Damages TAOM files. |
 | [Reinforcement System](https://www.nexusmods.com/mountandblade2bannerlord/mods/6501) | Broken |  |  | Known broken with TAOM. |
+| Titular Governor | Not checked yet | 1 works, 0 broken |  |  |
 
-96 mods. List updated 2026-10-18.
+97 mods. List updated 2026-10-18.
