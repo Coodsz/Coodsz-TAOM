@@ -104,6 +104,7 @@
     { "id": "TAOM_XorberaxCompatibility", "name": "TAOM Xorberax Patch", "workshopId": "", "nexusId": "13207", "tag": "loads", "class": "B", "source": "server-loads", "checked": "2026-10-18", "note": "One of the TAOM Compatibility Patches. Needs Xorberax's Legacy and goes last, after it. Use the build from 2026-10-14 or newer. The host and every player need the same patches. Passed the automatic server load test on 2026-10-18 with version v0.1.1. Joining was not tested." }
   ],
   "community": [
-    { "id": "TitularGovernor", "name": "Titular Governor", "works": 1, "broken": 0, "lastReport": "2026-10-27" }
+    { "id": "TitularGovernor", "name": "Titular Governor", "works": 1, "broken": 0, "lastReport": "2026-10-27" },
+    { "id": "Bannerlord.HorseSummary", "name": "UI Mount Types Summary", "works": 1, "broken": 0, "lastReport": "2026-10-27" }
   ]
 }

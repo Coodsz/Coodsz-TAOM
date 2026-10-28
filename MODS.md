@@ -125,5 +125,6 @@ With a GitHub account you can also use the [report form](https://github.com/Cood
 | [Frontline Mod](https://www.nexusmods.com/mountandblade2bannerlord/mods/9058) | Broken |  |  | Damages TAOM files. |
 | [Reinforcement System](https://www.nexusmods.com/mountandblade2bannerlord/mods/6501) | Broken |  |  | Known broken with TAOM. |
 | Titular Governor | Not checked yet | 1 works, 0 broken |  |  |
+| UI Mount Types Summary | Not checked yet | 1 works, 0 broken |  |  |
 
-97 mods. List updated 2026-10-18.
+98 mods. List updated 2026-10-18.
