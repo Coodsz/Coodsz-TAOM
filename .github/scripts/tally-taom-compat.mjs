@@ -1,13 +1,14 @@
-// The TAOM and AD1259 community lists: counts the approved mod reports of one tool into its list
-// file and writes MODS.md, the readable page, in that tool's repository:
+// The TAOM, AD1259 and Burning Empires community lists: counts the approved mod reports of one tool
+// into its list file and writes MODS.md, the readable page, in that tool's repository:
 //   --list taom    (default) compat/taom-mod-compat.json in Coodsz/Coodsz-TAOM
 //   --list ad1259  compat/ad1259-mod-compat.json in Coodsz/Coodsz-AD1259 (the fixed AD1259 pack)
+//   --list be      compat/be-mod-compat.json in Coodsz/Coodsz-BurningEmpires
 //
 // The reports are the one click reports the tools send through server/mod-reports-worker
-// (labels mod-compat, mod-report, pending and taom or ad1259; they count once pending is removed,
+// (labels mod-compat, mod-report, pending and taom, ad1259 or be; they count once pending is removed,
 // by Coodsz or by the hourly auto approval, auto-approve-reports.mjs) and the tool's issue form
-// (labels mod-compat and taom or ad1259, taom-compat/ and ad1259-compat/.github/ISSUE_TEMPLATE/
-// mod-compat.yml in the launcher repository). Reading the issues and picking the latest vote per
+// (labels mod-compat and taom, ad1259 or be, taom-compat/, ad1259-compat/ and be-compat/
+// .github/ISSUE_TEMPLATE/mod-compat.yml in the launcher repository). Reading the issues and picking the latest vote per
 // person and mod is the same as the Coop and Friends tally (collectReports in tally-mod-compat.mjs):
 // pending, invalid and spam reports do not count.
 //
@@ -21,12 +22,13 @@
 // An entry with no counted report has none of them. Reported mods that are not on the list go
 // into a separate "community" array next to "mods" with the same count fields, so the tools,
 // which read only "mods", never show a badge Coodsz did not give. The TAOM tools skip fields
-// they do not know (System.Text.Json), so schemaVersion stays 2. No tool reads the AD1259 file yet.
+// they do not know (System.Text.Json), so schemaVersion stays 2, and the BE tools read the BE file
+// the same way. No tool reads the AD1259 file yet.
 //
 // Every run counts all reports again; running twice on the same input gives the same files.
 //
 // Usage:
-//   node tally-taom-compat.mjs [--list taom|ad1259] [--file <list file>] [--page MODS.md] [--issues fixture.json] [--dry-run]
+//   node tally-taom-compat.mjs [--list taom|ad1259|be] [--file <list file>] [--page MODS.md] [--issues fixture.json] [--dry-run]
 //   node tally-taom-compat.mjs --page-only [--list ...] [--file ...] [--page ...]   (only writes MODS.md from the file as it is)
 //
 // Without --issues the issues come from the GitHub API (GITHUB_TOKEN and GITHUB_REPOSITORY).
@@ -41,6 +43,7 @@ export { NOT_CHECKED };
 export const COUNT_KEYS = ['works', 'broken', 'clientOnly', 'lastReport'];
 export const REPORT_FORM_URL = 'https://github.com/Coodsz/Coodsz-TAOM/issues/new?template=mod-compat.yml';
 export const AD1259_REPORT_FORM_URL = 'https://github.com/Coodsz/Coodsz-AD1259/issues/new?template=mod-compat.yml';
+export const BE_REPORT_FORM_URL = 'https://github.com/Coodsz/Coodsz-BurningEmpires/issues/new?template=mod-compat.yml';
 
 // The plain words for each TAOM tag, in the order MODS.md lists them.
 export const STATUS = [
@@ -170,7 +173,7 @@ export function checkedCell(e) {
 const versionsOf = (doc, first) => [first, doc.game && `Bannerlord ${doc.game}`, doc.coop && `Coop ${doc.coop}`].filter(Boolean).join(', ');
 
 /**
- * What differs between the two lists: the file kind, where it sits, which reports count, the tags,
+ * What differs between the lists: the file kind, where it sits, which reports count, the tags,
  * the text on top of MODS.md and the table columns. keepOrder lists the hand entries of one status
  * in the file's order (the AD1259 load order) instead of by name.
  */
@@ -208,7 +211,7 @@ export const LISTS = {
         '',
         '## How to report a mod',
         '',
-        'Click **Report a mod** at the top of the Coodsz TAOM Client Launcher (or **Report** on the bar after a',
+        'Click **Report a mod** on the Logs and help page of the Coodsz TAOM Client Launcher (or **Report** on the bar after a',
         'game) and pick Works or Broken for each mod. No GitHub account is needed. A report counts here about a',
         'day later.',
         `With a GitHub account you can also use the [report form](${REPORT_FORM_URL}).`,
@@ -251,7 +254,7 @@ export const LISTS = {
         '',
         '## How to report a mod',
         '',
-        'Click **Report a mod** at the top of the Coodsz AD1259 Client Launcher (or **Report** on the bar after a',
+        'Click **Report a mod** on the Logs and help page of the Coodsz AD1259 Client Launcher (or **Report** on the bar after a',
         'game) and pick Works or Broken for each mod. No GitHub account is needed. A report counts here about a',
         'day later.',
         `With a GitHub account you can also use the [report form](${AD1259_REPORT_FORM_URL}).`,
@@ -259,6 +262,49 @@ export const LISTS = {
     },
     header: '| Mod | Status | Version | Players | Last report | Note |',
     row: (e, status) => `| ${modCell(e)} | ${status} | ${mdCell(e.version)} | ${playersCell(e)} | ${dayOf(e.lastReport)} | ${mdCell(e.note)} |`,
+  },
+  be: {
+    kind: 'CoodszBeCompat',
+    file: 'compat/be-mod-compat.json',
+    // Every report in the BE repository is a BE one, so TAOM and AD1259 reports are left out.
+    leaveOut: [TAOM_LABEL, AD1259_LABEL],
+    // The same tags as the TAOM list, which the BE tools read the same way.
+    statuses: STATUS,
+    keepOrder: false,
+    intro: doc => {
+      const versions = versionsOf(doc, doc.be && `Burning Empires ${doc.be}`);
+      return [
+        '# Burning Empires mod list',
+        '',
+        `Which mods work with Burning Empires in Coop${versions ? ` (${versions})` : ''}. This page is made from`,
+        '[compat/be-mod-compat.json](compat/be-mod-compat.json), the list the Coodsz Burning Empires tools show,',
+        'and is written again on its own whenever a player report is counted.',
+        '',
+        '## What the statuses mean',
+        '',
+        'The status is set by hand by Coodsz. Player reports never change it; they show in the Players column.',
+        '',
+        '- **Works**: tested in Coop by Coodsz, a Burning Empires server with a player joining.',
+        '- **Everyone needs it**: works, but the host and every player need the same version.',
+        '- **Loads**: passed the automatic server load test of the Burning Empires server tool. Joining was not tested.',
+        '- **Reported working**: reported working in Burning Empires singleplayer, not tested in Coop yet.',
+        '- **Risky**: can work, but it changes campaign logic or battles, or is not tested with Burning Empires yet. The note says why.',
+        '- **Broken**: known to break Burning Empires or Coop. Leave it off.',
+        `- **${NOT_CHECKED}**: players reported it, Coodsz has not checked it.`,
+        '',
+        '**Players** counts the players who reported it works or is broken. **Checked by Coodsz** is the day',
+        'Coodsz tested it himself.',
+        '',
+        '## How to report a mod',
+        '',
+        'Click **Report a mod** on the Logs and help page of the Coodsz Burning Empires Client Launcher (or **Report** on the bar after a',
+        'game) and pick Works or Broken for each mod. No GitHub account is needed. A report counts here about a',
+        'day later.',
+        `With a GitHub account you can also use the [report form](${BE_REPORT_FORM_URL}).`,
+      ];
+    },
+    header: '| Mod | Status | Players | Checked by Coodsz | Note |',
+    row: (e, status) => `| ${modCell(e)} | ${status} | ${playersCell(e)} | ${checkedCell(e)} | ${mdCell(e.note)} |`,
   },
 };
 

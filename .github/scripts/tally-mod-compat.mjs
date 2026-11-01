@@ -14,7 +14,8 @@
 // TAOM reports (label "taom") are not counted here; tally-taom-compat.mjs counts them in the
 // Coodsz-TAOM repository, where the worker files them. AD1259 reports (label "ad1259") are left
 // out too; the same script counts them in Coodsz-AD1259 (tally-taom-compat.mjs --list ad1259).
-// Both kinds only sit here from before the worker filed them in their own repository.
+// Burning Empires reports (label "be") likewise go to the Burning Empires repository (--list be).
+// These kinds only sit here from before the worker filed them in their own repository.
 //
 // Next to the counts each entry gets "clientOnly" (players who said it only needs to be on the
 // players' PCs; it never changes the status) and "lastReport" (the day of the newest counted
@@ -46,6 +47,8 @@ export const REPORT_LABEL = 'mod-report';
 export const TAOM_LABEL = 'taom';
 // AD1259 client reports: counted in Coodsz-AD1259 against the fixed pack, never here.
 export const AD1259_LABEL = 'ad1259';
+// Burning Empires client and server reports: counted in the Burning Empires repository, never here.
+export const BE_LABEL = 'be';
 // A mod counts as "broken together with" this one once it was in this many broken reports and in no works report.
 export const CONFLICT_MIN = 2;
 // "testedWith", "conflicts" and "needs" keep at most this many ids.
@@ -55,7 +58,7 @@ export const COMMON_MODS = ['bannerlord.harmony', 'bannerlord.butterlib', 'banne
 // The status changes on its own once works - broken reaches this difference.
 export const THRESHOLD = 3;
 
-const KEY_ORDER = ['id', 'name', 'status', 'coop', 'note', 'workshop', 'nexus', 'category', 'works', 'broken', 'clientOnly', 'lastReport', 'testedWith', 'conflicts', 'needs', 'idGuess'];
+const KEY_ORDER = ['id', 'name', 'status', 'coop', 'note', 'serverHideAssets', 'workshop', 'nexus', 'category', 'works', 'broken', 'clientOnly', 'lastReport', 'testedWith', 'conflicts', 'needs', 'idGuess'];
 const ID_PATTERN = /^[\p{L}\p{N}_.\-' ()+&!:]{1,100}$/u;
 
 // ---- JSONC ---------------------------------------------------------------
@@ -148,10 +151,10 @@ export function normalizeResult(value) {
 /**
  * The reports that count: only the latest one per person and mod. Reports labelled
  * invalid or spam, pull requests, bots and reports that cannot be read are skipped. leaveOut are
- * the tool labels this list does not count: TAOM and AD1259 here, only the other one in the TAOM
- * and AD1259 tallies (tally-taom-compat.mjs), where every report is of that tool.
+ * the tool labels this list does not count: TAOM, AD1259 and Burning Empires here, only the others in
+ * the TAOM, AD1259 and Burning Empires tallies (tally-taom-compat.mjs), where every report is of that tool.
  */
-export function collectReports(issues, { leaveOut = [TAOM_LABEL, AD1259_LABEL] } = {}) {
+export function collectReports(issues, { leaveOut = [TAOM_LABEL, AD1259_LABEL, BE_LABEL] } = {}) {
   const latest = new Map();
   const skipped = [];
   for (const issue of issues) {
@@ -160,6 +163,7 @@ export function collectReports(issues, { leaveOut = [TAOM_LABEL, AD1259_LABEL] }
     if (labels.some(l => IGNORED_LABELS.includes(l))) { skipped.push([issue.number, labels.includes('pending') ? 'pending' : 'invalid/spam']); continue; }
     if (leaveOut.includes(TAOM_LABEL) && labels.includes(TAOM_LABEL)) { skipped.push([issue.number, 'TAOM report']); continue; }
     if (leaveOut.includes(AD1259_LABEL) && labels.includes(AD1259_LABEL)) { skipped.push([issue.number, 'AD1259 report']); continue; }
+    if (leaveOut.includes(BE_LABEL) && labels.includes(BE_LABEL)) { skipped.push([issue.number, 'Burning Empires report']); continue; }
     const anonymous = labels.includes(REPORT_LABEL);
     if (issue.user?.type === 'Bot' && !anonymous) { skipped.push([issue.number, 'bot']); continue; }
     const f = parseForm(issue.body);
@@ -381,9 +385,9 @@ export function renderModsPage(doc) {
     '',
     '## How to report a mod',
     '',
-    'Click **Report a mod** at the top of Coodsz Coop and Friends (or **Report** on the bar after a game)',
-    'and pick Works or Broken for each mod. No GitHub account is needed. A report counts here about a',
-    'day later.',
+    'In Coodsz Coop and Friends, click **Report** beside a mod on the Mods page, or **Report a mod** on the',
+    'Logs and help page (or **Report** on the bar after a game), and pick Works or Broken for each mod. No',
+    'GitHub account is needed. A report counts here about a day later.',
     `With a GitHub account you can also use the [report form](${REPORT_FORM_URL}).`,
     '',
     '| Mod | Status | Players | Last report | Checked with Coop | Note |',
