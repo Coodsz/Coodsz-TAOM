@@ -21,7 +21,7 @@ Coodsz tested it himself.
 
 ## How to report a mod
 
-Click **Report a mod** at the top of the Coodsz TAOM Client Launcher (or **Report** on the bar after a
+Click **Report a mod** on the Logs and help page of the Coodsz TAOM Client Launcher (or **Report** on the bar after a
 game) and pick Works or Broken for each mod. No GitHub account is needed. A report counts here about a
 day later.
 With a GitHub account you can also use the [report form](https://github.com/Coodsz/Coodsz-TAOM/issues/new?template=mod-compat.yml).
