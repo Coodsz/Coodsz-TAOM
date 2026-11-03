@@ -126,6 +126,7 @@ With a GitHub account you can also use the [report form](https://github.com/Cood
 | [Reinforcement System](https://www.nexusmods.com/mountandblade2bannerlord/mods/6501) | Broken |  |  | Known broken with TAOM. |
 | Arabization | Not checked yet | 1 works, 0 broken |  |  |
 | Titular Governor | Not checked yet | 1 works, 0 broken |  |  |
+| Troop Sorting | Not checked yet | 1 works, 0 broken |  |  |
 | UI Mount Types Summary | Not checked yet | 1 works, 0 broken |  |  |
 
-99 mods. List updated 2026-10-18.
+100 mods. List updated 2026-10-18.

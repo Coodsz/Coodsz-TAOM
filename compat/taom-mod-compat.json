@@ -106,6 +106,7 @@
   "community": [
     { "id": "Arabization", "name": "Arabization", "works": 1, "broken": 0, "lastReport": "2026-10-30" },
     { "id": "TitularGovernor", "name": "Titular Governor", "works": 1, "broken": 0, "lastReport": "2026-10-27" },
+    { "id": "TroopSort", "name": "Troop Sorting", "works": 1, "broken": 0, "lastReport": "2026-11-02" },
     { "id": "Bannerlord.HorseSummary", "name": "UI Mount Types Summary", "works": 1, "broken": 0, "lastReport": "2026-10-27" }
   ]
 }
