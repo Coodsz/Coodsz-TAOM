@@ -6,6 +6,20 @@ I made these tools for ease of access. I am not affiliated with the TAOM team. T
 
 Works with Bannerlord **1.4.8**, TAOM **2.0.29.5** (all four modules), Workshop Coop **0.1.6**, and TAOM.CoopCompat **0.3.25**. TAOM 2.0.27 campaigns do not load on 2.0.29.5, so start a new campaign.
 
+## What it looks like
+
+![Coodsz TAOM Server Tool dashboard](images/server-tool-dashboard.png)
+
+The Server Tool dashboard. Start the server here and see the mods, versions and the addresses your friends can use.
+
+![Coodsz TAOM Client Launcher Play page](images/client-launcher-play.png)
+
+The Client Launcher Play page. It checks Bannerlord, TAOM and Coop, says what to fix, then joins the server.
+
+![Coodsz TAOM Server Tool Mods page](images/server-tool-mods.png)
+
+The Server Tool Mods page, with the load order and how each mod works in Coop.
+
 Download the programs from the [latest release](https://github.com/Coodsz/Coodsz-TAOM/releases/latest).
 
 - Players: `Coodsz-TAOM-Client-Launcher-vX.Y.Z.zip` from the latest release
