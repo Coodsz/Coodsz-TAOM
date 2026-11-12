@@ -91,7 +91,7 @@ The module writes these lines to the TAOM log, on the server and on each player:
 
 ## Status
 
-- The unit tests pass (86 of 86).
+- The unit tests pass (87 of 87).
 - Not run in a real Coop session yet. The first boot on a client and on a dedicated server, and a
   join, are still owed.
 - The zip names and where the built zips go are to agree with Coodsz.
