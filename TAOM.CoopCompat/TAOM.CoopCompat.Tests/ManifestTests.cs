@@ -13,16 +13,6 @@ public class ManifestTests
         (string?)parent.Element(element)?.Attribute("value");
 
     [TestMethod]
-    public void Version_EqualsTaomsVersion()
-    {
-        var taom = Value(Root("Main/_Module/SubModule.xml"), "Version");
-        var compat = Value(Root("CoopCompat/_Module/SubModule.xml"), "Version");
-
-        Assert.IsNotNull(taom);
-        Assert.AreEqual(taom, compat, "Coop's join check compares module versions exactly.");
-    }
-
-    [TestMethod]
     public void IdAndName_AreTaomCoopCompat()
     {
         var root = Root("CoopCompat/_Module/SubModule.xml");
@@ -57,15 +47,5 @@ public class ManifestTests
             .ToDictionary(e => (string)e.Attribute("id")!, e => (string?)e.Attribute("order"));
         Assert.AreEqual("LoadBeforeThis", metadata["TAOM"]);
         Assert.AreEqual("LoadBeforeThis", metadata["Coop"]);
-    }
-
-    [TestMethod]
-    public void TaomMetadataVersion_EqualsTaomsVersion()
-    {
-        var taom = Value(Root("Main/_Module/SubModule.xml"), "Version");
-        var pinned = (string?)Root("CoopCompat/_Module/SubModule.xml").Element("DependedModuleMetadatas")!
-            .Elements("DependedModuleMetadata").Single(e => (string?)e.Attribute("id") == "TAOM").Attribute("version");
-
-        Assert.AreEqual(taom, pinned);
     }
 }

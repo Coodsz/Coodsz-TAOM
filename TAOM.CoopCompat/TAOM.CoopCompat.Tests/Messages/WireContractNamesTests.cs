@@ -29,7 +29,7 @@ public class WireContractNamesTests
 
     [TestMethod]
     public void MomentumSnapshot_Layout() => Assert.AreEqual(
-        "TAOM.CoopCompat.Messages.CoopCompatMomentumSnapshot: 1=ProtocolVersion, 2=Sequence, 3=CampaignHours, 4=Keys, 5=Values",
+        "TAOM.CoopCompat.Messages.CoopCompatMomentumSnapshot: 1=ProtocolVersion, 2=Sequence, 4=Keys, 5=Values",
         Layout(typeof(CoopCompatMomentumSnapshot)));
 
     [TestMethod]
@@ -48,12 +48,13 @@ public class WireContractNamesTests
     }
 
     [TestMethod]
-    public void Contracts_UseSkipConstructorAndTheRightInterface()
+    public void Contracts_RunTheConstructorAndUseTheRightInterface()
     {
+        // The constructor's initializers are what turn an empty repeated field back into an empty array.
         foreach (var t in new[] { typeof(CoopCompatHello), typeof(CoopCompatHelloReply), typeof(CoopCompatMomentumSnapshot) })
         {
             var attr = (ProtoContractAttribute)t.GetCustomAttributes(typeof(ProtoContractAttribute), false).Single();
-            Assert.IsTrue(attr.SkipConstructor, t.Name);
+            Assert.IsFalse(attr.SkipConstructor, t.Name);
         }
 
         Assert.IsTrue(typeof(ICommand).IsAssignableFrom(typeof(CoopCompatHello)));

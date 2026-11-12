@@ -16,15 +16,32 @@ The TAOM team wrote this version. It follows the approach of Sternab's module, w
   join, at most once a minute after it changes, and once every in-game day. Without this, a player's
   War of the Ring screen stays at the value from the save they joined on.
 
-If Coop is not loaded, the module writes one line to the TAOM log and does nothing.
+The module starts when the first campaign starts. If Coop is not usable then, it writes one line to
+the TAOM log and does nothing more in that game session.
 
 ## What it needs
 
-- The same TAOM version on every player and on the server. The module's version is always TAOM's
-  version (v2.0.38 now), because Coop's join check compares module versions exactly.
-- Coop loads before it. Load order: `... TAOM, TAOM_Map, LOTRLOME_Armory, Coop, TAOM.CoopCompat`.
+- The same TAOM version, and the same version of this module, on every player and on the server.
+  Coop's join check compares module versions exactly. By our convention this module's version equals
+  TAOM's (v2.0.38 now), so one number covers the release.
+- It depends on TAOM and Coop, so the launcher sorts it after both:
+  `... TAOM, TAOM_Map, LOTRLOME_Armory, Coop, TAOM.CoopCompat`. Its code starts at the first campaign
+  start, so on the dedicated server its place against `DedicatedServer.Windows` does not matter.
 - It loads on players' games and on the dedicated server (its submodule has no tags).
 - No Coop file ships with it. The player gets Coop from Coop's own release.
+
+## Two DLLs
+
+The module builds two DLLs, and a package needs both in each of its `bin` folders:
+
+- `TAOM.CoopCompat.dll`: the entry point and the two services. `SubModule.xml` names only this one.
+- `TAOM.CoopCompat.Coop.dll`: every type that needs a Coop DLL to load (the Coop binding and the three
+  network messages), from `CoopCompat/Coop/`.
+
+The game scans every type of each DLL that `SubModule.xml` names before any module starts, and Coop's
+own DLLs are not loaded yet at that point. A type that needs Coop in the named DLL stops the game, so
+those types live in the second DLL, which loads later from the same folder. `TypeScanGateTests`
+fails if one moves back.
 
 ## Same id as 0.3.25
 
@@ -74,7 +91,7 @@ The module writes these lines to the TAOM log, on the server and on each player:
 
 ## Status
 
-- The unit tests pass (84 of 84).
+- The unit tests pass (86 of 86).
 - Not run in a real Coop session yet. The first boot on a client and on a dedicated server, and a
   join, are still owed.
 - The zip names and where the built zips go are to agree with Coodsz.

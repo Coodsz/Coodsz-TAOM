@@ -270,6 +270,18 @@ public class SettingsHandshakeServiceTests
     }
 
     [TestMethod]
+    public void Reply_MatchAfterTheWire_WritesTheClientPassLine()
+    {
+        _transport.CurrentRole = CoopRole.Client;
+        var serializer = new Common.Serialization.ProtoBufSerializer(new Common.Serialization.SerializableTypeMapper());
+        var sent = new CoopCompatHelloReply { ProtocolVersion = CoopCompatProtocol.ProtocolVersion, Verdict = (int)HandshakeVerdict.Match };
+
+        _transport.RaiseReply((CoopCompatHelloReply)serializer.Deserialize(serializer.Serialize(sent)));
+
+        _outcomes.Received().Pass("taom.coopcompat.settings.client", "", "verdict=match groups=0 build_mismatch=false");
+    }
+
+    [TestMethod]
     public void Reply_Inconclusive_RaisesNoNotice_ButLogs()
     {
         _transport.CurrentRole = CoopRole.Client;

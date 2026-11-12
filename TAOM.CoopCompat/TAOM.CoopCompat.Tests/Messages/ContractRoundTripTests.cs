@@ -51,9 +51,25 @@ public class ContractRoundTripTests
 
         Assert.AreEqual(1, back.ProtocolVersion);
         Assert.AreEqual(9_000_000_000L, back.Sequence);
-        Assert.AreEqual(1234.5, back.CampaignHours);
         CollectionAssert.AreEqual(new[] { "a", "b" }, back.Keys);
         CollectionAssert.AreEqual(new[] { "1", "2" }, back.Values);
+    }
+
+    [TestMethod]
+    public void EmptyArrays_RoundTripAsEmpty_NeverNull()
+    {
+        // protobuf-net writes nothing for an empty repeated field, so only the constructor's
+        // initializer can give the reader an empty array back.
+        var reply = (CoopCompatHelloReply)RoundTrip(new CoopCompatHelloReply { ProtocolVersion = 1 });
+        var hello = (CoopCompatHello)RoundTrip(new CoopCompatHello { ProtocolVersion = 1 });
+        var snapshot = (CoopCompatMomentumSnapshot)RoundTrip(new CoopCompatMomentumSnapshot { ProtocolVersion = 1 });
+
+        Assert.IsNotNull(reply.DivergentGroups);
+        Assert.AreEqual(0, reply.DivergentGroups.Length);
+        Assert.IsNotNull(hello.GroupNames);
+        Assert.IsNotNull(hello.GroupHashes);
+        Assert.IsNotNull(snapshot.Keys);
+        Assert.IsNotNull(snapshot.Values);
     }
 
     [TestMethod]

@@ -6,9 +6,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace TAOM.CoopCompat.Tests;
 
 /// <summary>
-/// The engine scans every submodule type before any OnSubModuleLoad runs (type-scan rule): the entry
-/// point's base, interfaces and fields may name only the framework, TaleWorlds and TAOM, and the
-/// transport interface it holds names no Coop type either.
+/// The transport interface the services hold names no Coop type, so a service never needs Coop to
+/// compile against or to load (TypeScanGateTests covers every type of the submodule DLL).
 /// </summary>
 [TestClass]
 public class SubModuleShapeTests
@@ -21,17 +20,6 @@ public class SubModuleShapeTests
     private static bool NamesCoop(Type type) =>
         CoopAssemblies.Contains(type.Assembly.GetName().Name)
         || (type.IsGenericType && type.GetGenericArguments().Any(NamesCoop));
-
-    [TestMethod]
-    public void SubModule_BaseInterfacesAndFields_NameNoCoopType()
-    {
-        var type = typeof(CoopCompatSubModule);
-        var fields = type.GetFields(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
-
-        Assert.IsFalse(NamesCoop(type.BaseType!));
-        Assert.IsFalse(type.GetInterfaces().Any(NamesCoop));
-        Assert.IsFalse(fields.Any(f => NamesCoop(f.FieldType)), string.Join(", ", fields.Select(f => f.Name + ":" + f.FieldType)));
-    }
 
     [TestMethod]
     public void TransportInterface_NamesNoCoopType_InAnySignature()

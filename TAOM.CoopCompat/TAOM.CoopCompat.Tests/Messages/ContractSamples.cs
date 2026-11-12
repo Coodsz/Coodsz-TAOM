@@ -29,7 +29,6 @@ internal static class ContractSamples
     {
         ProtocolVersion = 1,
         Sequence = 9_000_000_000L,
-        CampaignHours = 1234.5,
         Keys = new[] { "a", "b" },
         Values = new[] { "1", "2" },
     };

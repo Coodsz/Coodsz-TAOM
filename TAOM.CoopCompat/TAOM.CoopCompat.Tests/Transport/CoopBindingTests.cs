@@ -73,12 +73,13 @@ public class CoopBindingTests
     }
 
     [TestMethod]
-    public void GameThread_RunTakesAnActionAndOptionalArguments()
+    public void GameThread_RunSafeTakesAnActionAndOptionalArguments()
     {
-        var run = Method(typeof(GameThread), "Run", typeof(Action), typeof(bool), typeof(string), typeof(string), typeof(string));
+        var run = Method(typeof(GameThread), "RunSafe", typeof(Action), typeof(bool), typeof(string), typeof(string), typeof(string));
 
         Assert.IsTrue(run.IsStatic);
-        Assert.IsTrue(run.GetParameters().Skip(1).All(p => p.IsOptional), "CoopTransport calls Run(action) only.");
+        Assert.AreEqual("context", run.GetParameters()[2].Name, "CoopTransport passes context by name.");
+        Assert.IsTrue(run.GetParameters().Skip(1).All(p => p.IsOptional), "CoopTransport calls RunSafe(action, context: ...) only.");
     }
 
     [TestMethod]

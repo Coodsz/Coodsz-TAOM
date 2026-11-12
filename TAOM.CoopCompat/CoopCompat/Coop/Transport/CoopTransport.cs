@@ -23,7 +23,7 @@ public sealed class CoopTransport : ICoopTransport
     private readonly Action<Action> _runOnGameThread;
     private bool _started;
 
-    public CoopTransport() : this(action => GameThread.Run(action))
+    public CoopTransport() : this(action => GameThread.RunSafe(action, context: "TAOM.CoopCompat"))
     {
     }
 

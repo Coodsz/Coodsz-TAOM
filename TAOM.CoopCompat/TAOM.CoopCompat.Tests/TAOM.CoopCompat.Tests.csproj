@@ -28,6 +28,7 @@
 	<ItemGroup Condition="'$(TaomCoopCompatEnabled)' == 'true'">
 		<Compile Include="**\*.cs" Exclude="obj\**;bin\**" />
 		<ProjectReference Include="..\CoopCompat\TAOM.CoopCompat.csproj" />
+		<ProjectReference Include="..\CoopCompat\Coop\TAOM.CoopCompat.Coop.csproj" />
 		<ProjectReference Include="..\Main\TAOM.csproj" />
 		<Reference Include="Common"><HintPath>$(CoopBinDir)\Common.dll</HintPath><Private>True</Private></Reference>
 		<Reference Include="Autofac"><HintPath>$(CoopBinDir)\Autofac.dll</HintPath><Private>True</Private></Reference>

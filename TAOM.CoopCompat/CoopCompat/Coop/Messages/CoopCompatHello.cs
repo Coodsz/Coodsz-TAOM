@@ -17,7 +17,7 @@ public static class CoopCompatProtocol
 /// Client to server, sent when the client's campaign join completes. The full type name is the wire
 /// id and the field numbers are the layout: never rename, move or renumber (WireContractNamesTests).
 /// </summary>
-[ProtoContract(SkipConstructor = true)]
+[ProtoContract]
 public sealed class CoopCompatHello : ICommand
 {
     [ProtoMember(1)] public int ProtocolVersion { get; set; }

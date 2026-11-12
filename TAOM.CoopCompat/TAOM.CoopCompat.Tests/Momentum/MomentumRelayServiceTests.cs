@@ -59,7 +59,6 @@ public class MomentumRelayServiceTests
     {
         ProtocolVersion = protocol,
         Sequence = sequence,
-        CampaignHours = 5,
         Keys = new[] { "version", "free.momentum" },
         Values = new[] { "1", "9" },
     };
@@ -81,10 +80,10 @@ public class MomentumRelayServiceTests
         Assert.AreEqual("7", sent.Peer.Label);
         Assert.AreEqual(CoopCompatProtocol.ProtocolVersion, sent.Snapshot.ProtocolVersion);
         Assert.AreEqual(1L, sent.Snapshot.Sequence);
-        Assert.AreEqual(_hours, sent.Snapshot.CampaignHours);
         CollectionAssert.AreEquivalent(_war.Keys.ToList(), sent.Snapshot.Keys);
         Assert.AreEqual("10|50.5|a battle | with a pipe", sent.Snapshot.Values[Array.IndexOf(sent.Snapshot.Keys, "free.ev.BattleWon.0")]);
         Assert.AreEqual(0, _transport.Broadcasts.Count);
+        _outcomes.Received().Pass("taom.coopcompat.momentum.server", "7", "sequence=1 entries=" + _war.Count);
     }
 
     [TestMethod]
@@ -129,7 +128,8 @@ public class MomentumRelayServiceTests
         Tick(secondsLater: 600);
 
         Assert.AreEqual(1, _transport.Broadcasts.Count);
-        _outcomes.Received().Pass("taom.coopcompat.momentum.server", "", Arg.Any<string>());
+        // A broadcast can go out with no client connected, so only the answer to a hello writes the check line.
+        _outcomes.DidNotReceive().Pass("taom.coopcompat.momentum.server", Arg.Any<string>(), Arg.Any<string>());
     }
 
     [TestMethod]
@@ -151,7 +151,7 @@ public class MomentumRelayServiceTests
     }
 
     [TestMethod]
-    public void Tick_WhenOnlyAnEventExpiryTimeMoved_SendsNothing()
+    public void Tick_WhenAnEventExpiryTimeChanged_Sends()
     {
         MarkChanged();
         Tick();
@@ -160,7 +160,7 @@ public class MomentumRelayServiceTests
 
         Tick(secondsLater: 120);
 
-        Assert.AreEqual(1, _transport.Broadcasts.Count);
+        Assert.AreEqual(2, _transport.Broadcasts.Count);
     }
 
     [TestMethod]

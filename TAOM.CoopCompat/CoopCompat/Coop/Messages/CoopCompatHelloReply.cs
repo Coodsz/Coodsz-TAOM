@@ -5,7 +5,7 @@ using ProtoBuf;
 namespace TAOM.CoopCompat.Messages;
 
 /// <summary>Server to the one client that sent a <see cref="CoopCompatHello"/>. Wire contract: never rename or renumber.</summary>
-[ProtoContract(SkipConstructor = true)]
+[ProtoContract]
 public sealed class CoopCompatHelloReply : IEvent
 {
     [ProtoMember(1)] public int ProtocolVersion { get; set; }

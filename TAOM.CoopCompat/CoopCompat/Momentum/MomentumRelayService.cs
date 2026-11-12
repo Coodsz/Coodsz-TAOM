@@ -82,7 +82,7 @@ public sealed class MomentumRelayService
             return;
         }
 
-        var snapshot = Build(data, hours);
+        var snapshot = Build(data);
         if (!_transport.Broadcast(snapshot)) return;
 
         _dirty = false;
@@ -91,49 +91,43 @@ public sealed class MomentumRelayService
         _keepAliveBaselineHours = hours;
         _lastSentComparable = comparable;
         _logger.LogInfo("[CoopCompat] momentum broadcast sequence=" + snapshot.Sequence + " entries=" + snapshot.Keys.Length + (keepAliveDue ? " keepalive" : ""));
-        _outcomes.Pass(ServerOutcome, "", "sequence=" + snapshot.Sequence + " entries=" + snapshot.Keys.Length);
     }
 
     private void OnHello(CoopPeer peer, CoopCompatHello hello)
     {
         if (_transport.CurrentRole != CoopRole.Server) return;
 
-        var snapshot = Build(_store.CaptureWarState(), _campaignHours());
-        if (_transport.SendToPeer(peer, snapshot))
-            _logger.LogInfo("[CoopCompat] momentum snapshot to peer=" + peer.Label + " sequence=" + snapshot.Sequence + " entries=" + snapshot.Keys.Length);
-        else
+        var snapshot = Build(_store.CaptureWarState());
+        if (!_transport.SendToPeer(peer, snapshot))
+        {
             _logger.LogWarning("[CoopCompat] momentum snapshot to peer=" + peer.Label + " not sent: no network");
+            return;
+        }
+
+        // The check line proves a joining client was answered, so it is written here, once per peer.
+        var detail = "sequence=" + snapshot.Sequence + " entries=" + snapshot.Keys.Length;
+        _logger.LogInfo("[CoopCompat] momentum snapshot to peer=" + peer.Label + " " + detail);
+        _outcomes.Pass(ServerOutcome, peer.Label, detail);
     }
 
-    private CoopCompatMomentumSnapshot Build(Dictionary<string, string> data, double hours)
+    private CoopCompatMomentumSnapshot Build(Dictionary<string, string> data)
     {
         var keys = data.Keys.ToArray();
         return new CoopCompatMomentumSnapshot
         {
             ProtocolVersion = CoopCompatProtocol.ProtocolVersion,
             Sequence = ++_sequence,
-            CampaignHours = hours,
             Keys = keys,
             Values = keys.Select(k => data[k]).ToArray(),
         };
     }
 
-    // The snapshot as text with each event's end hour removed: the end hour moves on its own as time passes.
+    // The snapshot as text in key order, so two captures of the same state compare equal.
     private static string Comparable(Dictionary<string, string> data)
     {
         var text = new StringBuilder();
         foreach (var pair in data.OrderBy(p => p.Key, StringComparer.Ordinal))
-        {
-            var value = pair.Value;
-            if (pair.Key.Contains(".ev."))
-            {
-                // value|endHours|description, the description last because it may hold a pipe.
-                var parts = value.Split(new[] { '|' }, 3);
-                if (parts.Length == 3) value = parts[0] + "|" + parts[2];
-            }
-
-            text.Append(pair.Key).Append('=').Append(value).Append('\n');
-        }
+            text.Append(pair.Key).Append('=').Append(pair.Value).Append('\n');
 
         return text.ToString();
     }

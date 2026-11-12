@@ -10,11 +10,11 @@ using TaleWorlds.Localization;
 namespace TAOM.CoopCompat.Tests;
 
 /// <summary>
-/// ADR-007 for this assembly, the intent of TAOM.Tests' ServiceSignatureGateTests: a type named
+/// ADR-007 for both module assemblies, the intent of TAOM.Tests' ServiceSignatureGateTests: a type named
 /// *Service, an I*Adapter interface or the transport seam may not name a TaleWorlds class (other than
 /// TextObject) or a Coop class in a parameter, return or field of a public, internal or protected
 /// member. Arrays, by-ref and generic arguments are unwrapped; value types, interfaces and delegates
-/// pass. There is no baseline: this assembly starts clean and stays clean.
+/// pass. There is no baseline: these assemblies start clean and stay clean.
 /// </summary>
 [TestClass]
 public class ServiceSignatureGateTests
@@ -24,13 +24,18 @@ public class ServiceSignatureGateTests
         "TaleWorlds.", "SandBox", "StoryMode", "Common", "GameInterface", "Coop.Core", "LiteNetLib", "protobuf-net", "Autofac",
     };
 
+    private static readonly Assembly[] ModuleAssemblies =
+    {
+        typeof(CoopCompatSubModule).Assembly, typeof(TAOM.CoopCompat.Transport.CoopTransport).Assembly,
+    };
+
     private const BindingFlags Declared = BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Static
         | BindingFlags.Public | BindingFlags.NonPublic;
 
     [TestMethod]
     public void ServicesAdaptersAndTheTransportSeam_NameNoTaleWorldsOrCoopClass()
     {
-        var hits = Scan(new[] { typeof(CoopCompatSubModule).Assembly });
+        var hits = Scan(ModuleAssemblies);
 
         Assert.AreEqual(0, hits.Count, "A service, adapter interface or the transport seam names an engine or Coop class (ADR-007):"
             + Environment.NewLine + string.Join(Environment.NewLine, hits.Select(h => h.Key + "  <- " + h.Value)));
@@ -39,7 +44,7 @@ public class ServiceSignatureGateTests
     [TestMethod]
     public void TheScan_SeesTheServicesItGuards()
     {
-        var names = typeof(CoopCompatSubModule).Assembly.GetTypes().Where(InScope).Select(t => t.Name).ToList();
+        var names = ModuleAssemblies.SelectMany(a => a.GetTypes()).Where(InScope).Select(t => t.Name).ToList();
 
         CollectionAssert.IsSubsetOf(new[] { "SettingsHandshakeService", "MomentumRelayService", "ICoopTransport" }, names);
     }
