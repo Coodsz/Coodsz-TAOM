@@ -47,16 +47,44 @@ public interface ICoopTransport
 
     event Action<CoopCompatMomentumSnapshot> SnapshotReceived;
 
+    /// <summary>
+    /// A guest's trade request, on the server only, with the StringId of the hero that the sender's current
+    /// connection controls, or "" when that connection controls none (the host then refuses it). A sender that is no
+    /// peer cannot be answered and is dropped before this event.
+    /// </summary>
+    event Action<CoopPeer, string, CoopCompatTradeRequest> TradeRequestReceived;
+
+    event Action<CoopCompatTradeReply> TradeReplyReceived;
+
+    /// <summary>
+    /// A player's career report, on the server only, with the StringId of the hero that the sender's current connection
+    /// controls, or "" when it controls none, as for <see cref="TradeRequestReceived"/>.
+    /// </summary>
+    event Action<CoopPeer, string, CoopCompatCareerReport> CareerReportReceived;
+
+    event Action<CoopCompatCareerUpdate> CareerUpdateReceived;
+
     /// <summary>Client to server. False when this process is not a client in a session or has no network.</summary>
     bool SendToServer(CoopCompatHello message);
+
+    bool SendToServer(CoopCompatTradeRequest message);
+
+    bool SendToServer(CoopCompatCareerReport message);
 
     /// <summary>Server to one peer. False when this process is not a server in a session or has no network.</summary>
     bool SendToPeer(CoopPeer peer, CoopCompatHelloReply message);
 
     bool SendToPeer(CoopPeer peer, CoopCompatMomentumSnapshot message);
 
+    bool SendToPeer(CoopPeer peer, CoopCompatTradeReply message);
+
+    bool SendToPeer(CoopPeer peer, CoopCompatCareerUpdate message);
+
     /// <summary>Server to every client. False when this process is not a server in a session or has no network.</summary>
     bool Broadcast(CoopCompatMomentumSnapshot message);
 
-    void RunOnGameThread(Action action);
+    bool Broadcast(CoopCompatCareerUpdate message);
+
+    /// <summary>Server to every client but <paramref name="peer"/>. False when this process is not a server in a session or has no network.</summary>
+    bool BroadcastExcept(CoopPeer peer, CoopCompatCareerUpdate message);
 }
