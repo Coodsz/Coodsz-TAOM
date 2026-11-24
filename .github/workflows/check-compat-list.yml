@@ -1,0 +1,20 @@
+name: Check compatibility list
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  generated-page:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Verify generated MODS.md
+        run: |
+          node .github/scripts/tally-taom-compat.mjs --page-only --file compat/taom-mod-compat.json --page MODS.md --list taom
+          git diff --exit-code -- MODS.md

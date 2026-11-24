@@ -5,6 +5,7 @@
   "game": "v1.4.8",
   "coop": "v0.1.6",
   "updated": "2026-10-18",
+  "stackNote": "TAOM 2.0.41+ works on Bannerlord 1.5.7 with Coop v0.1.8 and Coodsz TAOM Tools v1.2.18 or newer. The add-on verdicts below still describe the 1.4.8 stack.",
   "mods": [
     { "id": "BetterExceptionWindow", "name": "Better Exception Window", "workshopId": "2875478172", "tag": "safe", "class": "A", "source": "coodsz-coop", "checked": "2026-10-18", "note": "Shows a readable crash window. It needs Harmony, which TAOM Dependencies already has." },
     { "id": "Bannerlord.CCsBanners", "name": "CC's Banners", "workshopId": "2877445271", "tag": "safe", "class": "A", "source": "coodsz-coop", "checked": "2026-10-18", "note": "Banner looks only." },
