@@ -159,12 +159,15 @@ PART 4: SET UP THE LAUNCHER
 
 1. Start Bannerlord from Steam. The Bannerlord launcher opens.
 2. Click "Singleplayer" at the top, then click "Mods".
-3. Turn off War Sails (NavalDLC), Birth and Aging Options
-   (BirthAndDeath), and Fast Mode (FastMode) for this TAOM campaign.
-   Keep War Sails off on every PC and on the server. Coop v0.1.8
-   supports War Sails on Bannerlord v1.5.7 in other setups.
-   Coop refuses a join if Birth and Aging Options or Fast Mode
-   differs between the player and the host or server.
+3. Turn these OFF (no tick):
+   - War Sails (NavalDLC). Leave it off on every PC. TAOM does not run
+     War Sails. Coop v0.1.8 can run War Sails on a server that is set up
+     for it, and then every player needs it on. A TAOM game is not that
+     server. If one player has it on and the host has it off, Coop
+     refuses that player.
+   - Birth and Aging Options (BirthAndDeath). Coop refuses a player who
+     has this on.
+   - Fast Mode (FastMode). Coop refuses a player who has this on.
 4. Turn these ON (tick):
    - TAOM.Dependencies
    - Native, SandBoxCore, Sandbox, StoryMode, CustomBattle
@@ -369,9 +372,8 @@ Open it with Notepad. Read the part "If a Player Cannot Join".
 The usual causes:
 - A player has a different TAOM version or Coop version.
 - A player has one more or one less mod ticked (Part 4).
-- Check that War Sails is off for everyone, including on the server.
-  Check that Birth and Aging Options and Fast Mode match the host
-  or server (Part 4, step 3).
+- War Sails is on, or it does not match the host (Part 4, step 3).
+- Birth and Aging Options or Fast Mode is on (Part 4, step 3).
 - The mod order is wrong (Part 4, step 5).
 - A Windows firewall message is hidden behind the game (Alt+Tab).
 
@@ -380,14 +382,20 @@ OLDER TAOM.CoopCompat BUILDS
 ----------------------------
 
 An older TAOM.CoopCompat (version 0.3.25, for Bannerlord 1.4.8) uses the
-same folder name. Some older launchers and server tools have an
-"Install or repair TAOM" button that installs that old build. On
-Bannerlord v1.5.7, the old build makes Coop refuse your join.
+same folder name. Bannerlord 1.4.8 still uses that build. On Bannerlord
+v1.5.7 the 0.3.25 build makes Coop refuse your join.
 
-If that happens:
+The current Coodsz TAOM tools (v1.2.19 and later, including v1.2.23) do
+not install 0.3.25 onto a 1.5.7 game. "Install or repair TAOM" puts in
+the matching 1.5.7 module when yours is missing or older, and it keeps
+a newer copy you already have. An older copy of those tools can still
+install 0.3.25.
+
+If your 1.5.7 game has the 0.3.25 folder:
 1. Delete the folder Modules\TAOM.CoopCompat.
 2. Copy TAOM.CoopCompat again from the TAOM.CoopCompat.zip download
-   (Part 3).
+   (Part 3). Or click "Install or repair TAOM" in the current Coodsz
+   TAOM Client Launcher.
 
 
 DEDICATED SERVER
@@ -396,23 +404,21 @@ DEDICATED SERVER
 A dedicated server is a Coop server that runs without a game window,
 for example on a rented server.
 
-We tested TAOM on the Coop v0.1.8 dedicated server on 21 November 2026.
-A player joined and played on the campaign map. But the server download
-from Coop does not yet do all the setup that TAOM needs. Without that
-setup, the server stops when it starts. It can also fill your C: drive
-with crash files of 1 to 2 GB each.
+Do not set up a TAOM dedicated server by hand. The Coop server download
+does not do the setup TAOM needs. Without that setup the server stops
+when it starts, and it can fill the C: drive with crash files of 1 to
+2 GB each.
 
-Do not set up a TAOM dedicated server by hand. To host a dedicated
-server on Bannerlord v1.5.7 with Coop v0.1.8, download
-Coodsz-TAOM-Tools-v1.2.23.zip from:
-https://github.com/Coodsz/Coodsz-TAOM/releases/tag/v1.2.23
+Use the Coodsz TAOM tools. The Bannerlord 1.5.7 version is already out.
+The latest release checked for this guide is v1.2.23.
 
-Use the Server Tool from that download. It does the extra setup TAOM
-needs.
+https://github.com/Coodsz/Coodsz-TAOM/releases/latest
 
-On a dedicated server, put TAOM.CoopCompat in the server's module list,
-after TAOM. Every player who joins needs the same TAOM version and the
-same TAOM.CoopCompat as the server.
+Download the Coodsz TAOM Tools zip from that page. In the Server Tool,
+Prepare server and Start server do the extra setup, and they put
+TAOM.CoopCompat in the server module list after TAOM. Every player who
+joins needs the same TAOM version and the same TAOM.CoopCompat as the
+server.
 
 
 REPORT A PROBLEM
