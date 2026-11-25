@@ -34,7 +34,7 @@ Without it, TAOM still runs in co-op, but you do not get these features:
    ladder. The host keeps your ladder, takes the lord's materials and fits
    the piece you claim. Battles you win can give you lord's materials.
 
-In a single-player game this module does nothing.
+In a single player game this module does nothing.
 
 
 WHAT YOU NEED
@@ -60,10 +60,10 @@ You copy files into this folder in Parts 2 and 3.
 
 1. Open Steam.
 2. Go to your Library.
-3. Right-click "Mount & Blade II: Bannerlord".
+3. Right click "Mount & Blade II: Bannerlord".
 4. Click "Manage", then click "Browse local files".
    A folder window opens.
-5. Double-click the folder "Modules".
+5. Double click the folder "Modules".
 
 This window is your Modules folder. Keep it open.
 
@@ -76,8 +76,9 @@ PART 2: INSTALL BANNERLORD CO-OP v0.1.8
 
 Step A: Remove the Steam Workshop version of Coop.
 
-The Steam Workshop version of Coop can be older than v0.1.8. Two copies of
-Coop at the same time break the join.
+Coop v0.1.8 is available as a zip from GitHub only. If you subscribed
+to Coop on Steam Workshop, unsubscribe before installing the zip
+in Step B.
 
 1. In Steam, click "Workshop" (or open the Bannerlord page, then click
    "Workshop").
@@ -98,7 +99,7 @@ Windows can block files that come from the internet. Bannerlord then cannot
 load them. Do this BEFORE you extract the zip.
 
 1. Open your Downloads folder.
-2. Right-click "BannerlordCoop-v0.1.8.zip".
+2. Right click "BannerlordCoop-v0.1.8.zip".
 3. Click "Properties".
 4. At the bottom of the "General" tab, look for "Unblock".
 5. If you see it, put a tick in the "Unblock" box.
@@ -108,7 +109,7 @@ Step D: Put Coop in the Modules folder.
 
 1. If your Modules folder already has a folder named "Coop", delete that
    "Coop" folder first.
-2. Right-click "BannerlordCoop-v0.1.8.zip".
+2. Right click "BannerlordCoop-v0.1.8.zip".
 3. Click "Extract All...".
 4. Click "Extract". A new folder opens. It holds one folder, "Coop".
 5. Drag the "Coop" folder into your Modules folder.
@@ -158,10 +159,12 @@ PART 4: SET UP THE LAUNCHER
 
 1. Start Bannerlord from Steam. The Bannerlord launcher opens.
 2. Click "Singleplayer" at the top, then click "Mods".
-3. Turn these OFF (no tick). Coop refuses any player who has them on:
-   - War Sails (NavalDLC)
-   - Birth and Aging Options (BirthAndDeath)
-   - Fast Mode (FastMode)
+3. Turn off War Sails (NavalDLC), Birth and Aging Options
+   (BirthAndDeath), and Fast Mode (FastMode) for this TAOM campaign.
+   Keep War Sails off on every PC and on the server. Coop v0.1.8
+   supports War Sails on Bannerlord v1.5.7 in other setups.
+   Coop refuses a join if Birth and Aging Options or Fast Mode
+   differs between the player and the host or server.
 4. Turn these ON (tick):
    - TAOM.Dependencies
    - Native, SandBoxCore, Sandbox, StoryMode, CustomBattle
@@ -213,7 +216,7 @@ You need a TAOM save before you can host.
 Step A: Make the campaign save (one time only).
 
 1. On the main menu, start a new TAOM campaign the same way you start a
-   single-player game.
+   single player game.
 2. Make your character.
 3. Wait until you see the campaign map.
 4. Save the game. Give the save a name you can remember.
@@ -302,33 +305,6 @@ MESSAGES FROM TAOM.CoopCompat
 -----------------------------
 
 "Your TAOM build is not the host's build."
-    You and the host have different TAOM versions. Install the same TAOM
-    version as the host. Use the TAOM.CoopCompat folder from that same
-    TAOM version.
-
-"Your TAOM settings differ from the host's in: ..."
-    Some of your TAOM mod settings are not the same as the host's. The
-    message names the settings groups. Open the mod options and change
-    those settings to match the host's.
-
-"The host has not answered your last request yet."
-    (Elite Emissary or armoury.) The host's game is still working on your
-    last request. Wait a few seconds.
-
-"The host did not answer your last request. Try again."
-    (Elite Emissary or armoury.) The host's game did not reply within 15
-    seconds. Your first request can still go through late. Check your gold,
-    troops and items BEFORE you click again.
-
-"The host cannot trade for you here: ..."
-    (Elite Emissary or armoury.) Your party must be in the settlement, and
-    not in a battle or a siege. Nothing was charged.
-
-
-MESSAGES YOU CAN SEE
---------------------
-
-"Your TAOM build is not the host's build."
     You and the host have different TAOM downloads. Install the same TAOM
     download as the host, and the TAOM.CoopCompat download for that TAOM
     version.
@@ -393,7 +369,9 @@ Open it with Notepad. Read the part "If a Player Cannot Join".
 The usual causes:
 - A player has a different TAOM version or Coop version.
 - A player has one more or one less mod ticked (Part 4).
-- War Sails, Birth and Aging Options or Fast Mode is on (Part 4, step 3).
+- Check that War Sails is off for everyone, including on the server.
+  Check that Birth and Aging Options and Fast Mode match the host
+  or server (Part 4, step 3).
 - The mod order is wrong (Part 4, step 5).
 - A Windows firewall message is hidden behind the game (Alt+Tab).
 
@@ -402,7 +380,7 @@ OLDER TAOM.CoopCompat BUILDS
 ----------------------------
 
 An older TAOM.CoopCompat (version 0.3.25, for Bannerlord 1.4.8) uses the
-same folder name. Some third-party launchers and server tools have an
+same folder name. Some older launchers and server tools have an
 "Install or repair TAOM" button that installs that old build. On
 Bannerlord v1.5.7, the old build makes Coop refuse your join.
 
@@ -424,9 +402,13 @@ from Coop does not yet do all the setup that TAOM needs. Without that
 setup, the server stops when it starts. It can also fill your C: drive
 with crash files of 1 to 2 GB each.
 
-Do not set up a TAOM dedicated server by hand. Use the Coodsz TAOM
-tools when their version for Bannerlord 1.5.7 is out. The tools do the
-extra setup for you.
+Do not set up a TAOM dedicated server by hand. To host a dedicated
+server on Bannerlord v1.5.7 with Coop v0.1.8, download
+Coodsz-TAOM-Tools-v1.2.23.zip from:
+https://github.com/Coodsz/Coodsz-TAOM/releases/tag/v1.2.23
+
+Use the Server Tool from that download. It does the extra setup TAOM
+needs.
 
 On a dedicated server, put TAOM.CoopCompat in the server's module list,
 after TAOM. Every player who joins needs the same TAOM version and the
