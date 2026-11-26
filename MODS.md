@@ -4,6 +4,8 @@ Which mods work with TAOM in Coop (TAOM 2.0.29.5, Bannerlord v1.4.8, Coop v0.1.6
 [compat/taom-mod-compat.json](compat/taom-mod-compat.json), the list the Coodsz TAOM tools show,
 and is written again on its own whenever a player report is counted.
 
+TAOM 2.0.41+ works on Bannerlord 1.5.7 with Coop v0.1.8 and Coodsz TAOM Tools v1.2.18 or newer. The add-on verdicts below still describe the 1.4.8 stack.
+
 ## What the statuses mean
 
 The status is set by hand by Coodsz. Player reports never change it; they show in the Players column.
