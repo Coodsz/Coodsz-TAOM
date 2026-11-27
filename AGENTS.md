@@ -29,6 +29,14 @@ A GitHub Actions bot writes these. Hand edits get overwritten on the next run or
 3. Open a pull request that says what changed and why, and how you checked it.
 4. Coodsz reviews and merges.
 
+## Independent review
+
+Claude-authored changes need independent Codex review at High reasoning or higher for substantive work. Codex-authored changes need independent Claude review. Ask a maintainer to arrange review if needed.
+
+Review the exact PR head, its full diff, and the checklist in the PR template. Verify each finding against the code and cite its file and line. Record tests and verification gaps. Recheck blockers at the updated head.
+
+Agents need approval from their operator to push, open a PR, or post a comment. Maintainers approve merges.
+
 ## House rules
 
 - Keep CRLF line endings and any byte order mark a file already has.
