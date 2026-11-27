@@ -8,4 +8,12 @@ Thanks for helping with Coodsz TAOM.
 - Do not edit `MODS.md` or the compatibility JSON by hand. A bot keeps them from player reports.
 - The tool source code is private. For changes to how a tool works, open an issue.
 
+## Tracking work
+
+Assign yourself to a linked issue before implementing. If GitHub does not allow self-assignment,
+comment to claim the issue or ask a maintainer to assign you. Open an issue first if needed.
+
+In your PR description, use Fixes #N for an issue in this repo or Fixes followed by the full issue URL
+for an issue in another repository. Follow the PR checklist and report what you verified.
+
 Using an AI agent? Point it at [AGENTS.md](AGENTS.md) first.
