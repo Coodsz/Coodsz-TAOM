@@ -8,7 +8,7 @@ Read this first if you are an AI coding agent (Claude Code, Codex, Cursor, Devin
 - The player guide: Coodsz-TAOM-Instructions.txt and README.txt.
 - The mod compatibility list: `compat/taom-mod-compat.json` and `MODS.md`, kept by a bot from player reports.
 - Issues: mod compatibility reports that the tools send. Crash reports go to a private repo.
-- The tool source code is not here. It is private. To change how a tool works, open an issue or ask Coodsz.
+- The tool source code is not here. It is public in [Coodsz/Coodsz-Coop-Tools](https://github.com/Coodsz/Coodsz-Coop-Tools). To change how a tool works, open an issue or a pull request there.
 
 ## The TAOM Coop compatibility module
 
