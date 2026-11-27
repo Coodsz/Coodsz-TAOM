@@ -6,7 +6,7 @@ Thanks for helping with Coodsz TAOM.
 - Found a bug in a tool? Use the send logs or crash report button in the tool, so the logs come with it.
 - Want to change a file here? Make a branch, open a pull request, and say what changed and why. Never push straight to `main`.
 - Do not edit `MODS.md` or the compatibility JSON by hand. A bot keeps them from player reports.
-- The tool source code is private. For changes to how a tool works, open an issue.
+- The tool source code is public in [Coodsz/Coodsz-Coop-Tools](https://github.com/Coodsz/Coodsz-Coop-Tools). For changes to how a tool works, open an issue or a pull request there.
 
 ## Tracking work
 
