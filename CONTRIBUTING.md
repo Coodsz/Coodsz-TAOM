@@ -23,6 +23,6 @@ This repo takes guide and list edits. Every PR is checked against these points.
 - Keep each PR focused on one change.
 - Text shown in a tool needs all of that tool's languages.
 - Guide and list edits need no game test.
-- Changes to the tools' code go to [Coodsz/Coodsz-Coop-Tools](https://github.com/Coodsz/Coodsz-Coop-Tools). Its [CONTRIBUTING.md](https://github.com/Coodsz/Coodsz-Coop-Tools/blob/master/CONTRIBUTING.md) has the full review checklist.
+- The full review checklist for code changes is in the Coop-Tools [CONTRIBUTING.md](https://github.com/Coodsz/Coodsz-Coop-Tools/blob/master/CONTRIBUTING.md).
 
 Using an AI agent? Point it at [AGENTS.md](AGENTS.md) first.
