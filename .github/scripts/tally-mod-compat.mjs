@@ -1,7 +1,3 @@
-// Ported from CoopKeep (https://github.com/Aderimo/bannerlord-coopkeep),
-// .github/scripts/tally-mod-compat.mjs, translated from Turkish and changed for the Coodsz tools.
-// MIT License, Copyright (c) 2026 aderimo. The full notice is in THIRD-PARTY-NOTICES.md.
-//
 // Counts the "mod-compat" issues from scratch and updates the works/broken counts and the
 // statuses in compat-list/mods.json.
 //

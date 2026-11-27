@@ -1,6 +1,3 @@
-# Adapted from CoopKeep (https://github.com/Aderimo/bannerlord-coopkeep), MIT,
-# Copyright (c) 2026 aderimo. See THIRD-PARTY-NOTICES.md.
-#
 # The TAOM mod report form for Coodsz/Coodsz-TAOM. .github/scripts/tally-taom-compat.mjs counts
 # these into compat/taom-mod-compat.json and MODS.md.
 name: TAOM mod report
